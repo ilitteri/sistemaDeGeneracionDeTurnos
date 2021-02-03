@@ -1,9 +1,3 @@
-<script src="//yihui.org/js/math-code.js"></script>
-<!-- Just one possible MathJax CDN below. You may use others. -->
-<script async
-  src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
 # Trabajo Práctico N°2
 
 ## Tabla de Contenidos
@@ -234,6 +228,7 @@ N: NOMBRE, especialidad ESPECIALIDAD, Z paciente(s) atendido(s)
 ```
 
 ## Mensajes de error
+[*Indice*](#Tabla-de-Contenidos)
 
 Para facilitar los mensajes de la aplicación sean exactamente los especificados, se proporciona un archivo `mensajes.h` que contiene las definiciones de todos los mensajes, tal que:
 
@@ -255,6 +250,7 @@ printf(PACIENTE_ENCOLADO, "Ingeniero Barrios");
 Si hay alguna discrepancia entre esta consigna y el archivo `mensajes.h`, este último es la versión canónica.
 
 ### Otras condiciones de error
+[*Indice*](#Tabla-de-Contenidos)
 
 El sistema aborta con código numérico 1 ante cualquiera de los siguientes errores **durante la fase de inicialización**:
 
@@ -265,16 +261,19 @@ El sistema aborta con código numérico 1 ante cualquiera de los siguientes erro
 - algún año no es un valor numérico.
 
 ## Funciones auxiliares del curso
+[*Indice*](#Tabla-de-Contenidos)
 
 Además del archivo **mensajes.h** ya mencionado, se proporcionan dos archivos auxiliares, **csv.h** y **csv.c**, para ayudar con la lectura tanto de los archivos CSV, como de los comandos. Su uso es opcional; cada grupo puede emplear sus propias funciones de lectura, o las proporcionadas por el curso en TPs anteriores.
 
 Además, se añade un esqueleto del programa principal del Trabajo Práctico **zyxcba.c**. Pueden bien utilizarlo, en cuyo caso deberán modificarlo para adaptar su uso a la estructuras de datos que utilicen. No es obligatorio su uso.
 
 ## Criterios de aprobación
+[*Indice*](#Tabla-de-Contenidos)
 
 Los siguientes aspectos son condición necesaria para la aprobación del trabajo práctico.
 
 ### Estructuras de Datos
+[*Indice*](#Tabla-de-Contenidos)
 
 Es necesario emplear la estructura de datos más apropiada para cada función del programa, en particular **teniendo en cuenta la complejidad temporal**. También es necesario utilizar dicha estructura de la forma más apropiada posible para optimizar de manera correcta el funcionamiento de la clínica.
 
@@ -283,6 +282,7 @@ Se puede (y alentamos) implementar otros TDAs o estructuras que faciliten o mejo
 Todas las estructuras deben estar implementadas de la forma más genérica posible y correctamente documentadas. En general, pueden emplear sin modificar los tipos implementados en entregas anteriores en la materia. Potencialmente, deberán modificar el TDA Árbol Binario de Búsqueda. En cualquier caso, si fuera necesario modificar algún TDA, la funcionalidad agregada debe estar implementada de forma completamente abstracta al presente trabajo práctico.
 
 ### Código del programa
+[*Indice*](#Tabla-de-Contenidos)
 
 El código entregado debe:
 
@@ -293,6 +293,7 @@ El código entregado debe:
 - ajustarse a la especificación de la consigna y pasar todas las pruebas automáticas.
 
 ### Complejidad
+[*Indice*](#Tabla-de-Contenidos)
 
 Cada comando debería funcionar de forma acorde, pero además deberá cumplir con los siguientes requisitos de complejidad:
 
@@ -303,6 +304,7 @@ Cada comando debería funcionar de forma acorde, pero además deberá cumplir co
 3. Comando Informe doctores: debe ser *O(d)* en el peor caso (en el que se tenga que mostrar todos los doctores del sistema), *O(log d)* en un caso promedio (en el caso en el que no se pidan mostrar demasiados doctores).
 
 ## Informe
+[*Indice*](#Tabla-de-Contenidos)
 
 Este trabajo práctico tiene como principal foco en el diseño del mismo (modularización, creación de nuevas estructuras y TDAs específicos del TP) así como el uso apropiado de las estructuras de datos vistas en clase. Por lo tanto, se les pide que escriban un informe de dicho diseño, puesto que además de ser capaces de escribir código correcto, también es necesario que aprendan a poder *transmitir* el porqué de sus decisiones, utilizando el lenguage técnico y justificaciones correspondientes.
 
@@ -313,6 +315,7 @@ El informe deberá consistir de las siguientes partes:
 - análisis y diseño de la solución, en particular: algoritmos y estructuras de datos utilizados, justificando conforme a los requisitos pedidos en este TP.
 
 ## Entrega
+[*Indice*](#Tabla-de-Contenidos)
 
 La entrega incluye, obligatoriamente, los siguientes archivos:
 
