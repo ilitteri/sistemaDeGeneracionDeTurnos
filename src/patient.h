@@ -3,7 +3,7 @@
 typedef struct Patient Patient;
 
 /* Registra un paciente */
-Patient *patient_check_in(char **patient_csv_line);
+Patient *patient_check_in(char *name, size_t year);
 
 /*  Obtiene el nombre de el paciente (no modifica al paciente)
 *   Pre: el paciente fué registrado.

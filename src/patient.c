@@ -8,7 +8,7 @@ typedef struct
     size_t entry_year;
 } Patient;
 
-Patient *patient_check_in(char **patient_csv_line)
+Patient *patient_check_in(char *name, size_t year)
 {
     Patient *patient;
 
@@ -17,8 +17,8 @@ Patient *patient_check_in(char **patient_csv_line)
         return NULL;
     }
 
-    patient->name = patient_csv_line[0];
-    patient->entry_year = patient_csv_line[1];
+    patient->name = name;
+    patient->entry_year = year;
 
     return patient;
 }

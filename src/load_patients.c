@@ -1,14 +1,32 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "patient.h"
 #include "hash_patients.h"
 #include "lista.h"
 
+static char *extract_name(char *original_name)
+{   
+    char *name = malloc(strlen(original_name) + 1);
+    if (name == NULL)
+    {
+        return NULL;
+    }
+    strcpy(name, original_name);
+    return name;
+}
+
+static void extract_year(char *original_year, size_t *year)
+{
+    sscanf(original_year, "%zu", year);
+}
+
 Hash_Patients *load_patients(lista_t *patient_csv_lines)
 {
     Hash_Patients *patient_register;
 
-    if  ((patient_register = create_patients_hash(destroy_patient)) == NULL)
+    if  ((patient_register = hash_patients_create(destroy_patient)) == NULL)
     {
         return NULL;
     }
@@ -17,7 +35,7 @@ Hash_Patients *load_patients(lista_t *patient_csv_lines)
 
     if ((list_iter = lista_iter_crear(patient_csv_lines)) == NULL)
     {
-        destroy_patients_hash(patient_register);
+        hash_patients_destroy(patient_register);
         return NULL;
     }
 
@@ -26,14 +44,28 @@ Hash_Patients *load_patients(lista_t *patient_csv_lines)
     {
         Patient *patient;
 
-        if ((patient = patient_check_in(lista_iter_ver_actual(list_iter))) == NULL)
+        char **patient_data = lista_iter_ver_actual(list_iter);
+
+        char *name;
+
+        if ((name = extract_name(patient_data[0])) == NULL)
         {
             lista_iter_destruir(list_iter);
-            destroy_patients_hash(patient_register);
+            hash_patients_destroy(patient_register);
             return NULL;
         }
 
-        ok &= save_patient(patient_register, patient);
+        size_t year;
+        extract_year(patient_data[1], &year);
+
+        if ((patient = patient_check_in(name, year)) == NULL)
+        {
+            lista_iter_destruir(list_iter);
+            hash_patients_destroy(patient_register);
+            return NULL;
+        }
+
+        ok &= hash_patients_save(patient_register, patient);
 
         lista_iter_avanzar(list_iter);
     }
@@ -42,7 +74,7 @@ Hash_Patients *load_patients(lista_t *patient_csv_lines)
 
     if (!ok)
     {
-        destroy_patients_hash(patient_register);
+        hash_patients_destroy(patient_register);
         return NULL;
     }
 
