@@ -5,18 +5,17 @@
 #include "strutil.h"
 
 /**
-Haciendo uso de strutil (split) lee un archivo csv y, línea a línea,
-va llamando al constructor que se pasa por parámetro. Dicho constructor se invoca
-con la línea separada por split, sin fines de línea ni ninguna otra consideración,
-y con el puntero extra que se pasa por parámetro.
-Importante: la función constructor no debe guardar las referencias a las cadenas
-dentro de arreglo de cadenas pasado por parámetros (hacer copias en caso de ser 
-necesario); luego de invocarse el constructor se invoca a free_strv.
+Haciendo uso de strutil (split) lee un archivo csv línea a línea.
 
-Se devuelve una lista con todos los elementos construidos. NULL en caso que el archivo
-csv (indicado por la ruta pasada por parámetro) no exista. 
+Se devuelve una lista con todos los elementos construidos con split. 
+Es decir una lista de arrays (char**) donde cada array es una linea del csv.
+devuelve NULL en caso de error al crear la lista.
 **/
-lista_t* csv_create_strucure(const char* csv_path, void* (*constructor) (char**, void*), void* extra);
+lista_t* csv_create_structure(FILE* csv_file);
 
+/**
+ * Destruye la lista de arrays y el contenido de estos.
+ **/
+void destroy_structure(lista_t* list);
 
 #endif
