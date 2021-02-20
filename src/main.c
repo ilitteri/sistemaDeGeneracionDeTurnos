@@ -3,7 +3,6 @@
 #include <stdlib.h>       /* malloc, free, exit */
 
 #include "messages.h"
-#include "error_handling.h"
 
 int handle_command_error(int argc);
 int handle_file_error(int argc, char *path);
@@ -25,6 +24,7 @@ int main(int argc, char **argv)
     handle_file_error(errno, patients_path);
 
     fclose(doctors_file);
+    fclose(patients_file);
 
     return 0; 
 } 
