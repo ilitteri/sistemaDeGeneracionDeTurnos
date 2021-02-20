@@ -32,3 +32,9 @@ size_t patient_entry_year(const Patient *patient)
 {
     return patient->entry_year;
 }
+
+void destroy_patient(Patient *patient)
+{
+    // free(name)
+    free(patient);
+}

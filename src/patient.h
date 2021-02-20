@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-typedef struct Patient;
+typedef struct Patient Patient;
 
 /* Registra un paciente */
 Patient *patient_check_in(char *name, size_t entry_year);
@@ -16,3 +16,6 @@ char *patient_name(const Patient *patient);
 *   Pos: anio de registro del paciente.
 */
 size_t patient_entry_year(const Patient *patient);
+
+/* Destruye los datos del paciente */
+void destroy_patient(Patient *patient);
