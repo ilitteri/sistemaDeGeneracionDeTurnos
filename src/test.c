@@ -33,7 +33,7 @@ int handle_command_error(int argc)
 {
     if (argc != 3)
     {
-        printf(ENOENT_CANT_PARAMS);
+        printf(ERR_CMD_PARAMS_COUNT);
         exit(EXIT_FAILURE);
     }
     return 0;
@@ -43,7 +43,7 @@ int handle_file_error(int errnum, char *path)
 {
     if (errnum == 2)
     {
-        printf(ENOENT_FILE, path);
+        printf(ERR_FILE, path);
         exit(EXIT_FAILURE);
     }
     return 0;
