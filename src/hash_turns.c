@@ -1,0 +1,125 @@
+#include <stdlib.h>
+#incldue <stdbool.h>
+
+#include "hash.h"
+#include "hash_turns.h"
+#include "priority_queue.h"
+#include "priority_heap.h"
+
+typedef enum Priority
+{
+    URGENT,
+    REGULAR
+} Priority;
+
+typedef struct 
+{
+    hash_t *urgent;
+    hash_t *regular;
+} HashTurns;
+
+static bool add_urgent_turn(hash_t *urgent, char *specialty, char *patient_name);
+static bool add_regular_turn(hash_t *regular, char *specialty, char *patient_name);
+static bool add_urgent_specialty(hash_t *urgent, char* specialty);
+static bool add_regular_specialty(hash_t *regular, char* specialty);
+
+HashTurns *hash_turns_create()
+{
+    HashTurns *turns;
+
+    if ((turns = hash_crear(hash_destruir)) == NULL)
+    {
+        return NULL;
+    }
+
+    if ((turns->urgent = hash_crear(cola_destruir)) == NULL)
+    {
+        free(turns);
+        return NULL;
+    }
+
+    if ((turns->regular = hash_crear(heap_destruir)) == NULL)
+    {
+        free(turns->urgent);
+        free(turns);
+        return NULL;
+    }
+
+    return turns;
+}
+
+static bool add_urgent_turn(hash_t *urgent, char *specialty, char *patient_name)
+{
+    
+}
+
+static bool add_regular_turn(hash_t *regular, char *specialty, char *patient_name)
+{
+
+}
+
+bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, char *patient_name)
+{
+    if (urgency == URGENT)
+    {
+        return add_urgent_turn(turns->urgent, specialty, patient_name);
+    }
+
+    else if (urgency == REGULAR)
+    {
+        return add_regular_turn(turns->regular, specialty, patient_name);
+    }
+
+    return false;
+}
+
+static bool add_urgent_specialty(hash_t *urgent, char* specialty)
+{
+    if (!hash_pertenece(urgent, specialty))
+    {
+        PriorityQueue *waiting_patients;
+        if ((waiting_patients = priority_queue_create()) == NULL)
+        {
+            return false;
+        }
+        hash_guardar(urgent, specialty, waiting_patients);
+    }
+    return true;
+}
+
+static bool add_regular_specialty(hash_t *regular, char* specialty)
+{
+    if (!hash_pertenece(regular, specialty))
+    {
+        PriorityHeap *waiting_patients;
+        if ((waiting_patients = priority_heap_create()) == NULL)
+        {
+            return false;
+        }
+        hash_guardar(regular, specialty, waiting_patients);
+    }
+    return true;
+}
+
+bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
+{
+    bool ok = true;
+    ok &= add_regular_specialty(turns->regular, specialty);
+    ok &= add_urgent_specialty(turns->urgent, specialty);
+
+    if (!ok)
+    {
+        priority_queue_destroy(hash_borrar(turns->urgent, specialty));
+        priority_heap_destroy(hash_borrar(turns->regular, specialty));
+        return false;
+    }
+
+    return true;
+}
+
+void hash_turns_destroy(HashTurns *turns)
+{
+    hash_destruir(turns->urgent);
+    hash_destruir(turns->regular);
+    free(turns);
+}
