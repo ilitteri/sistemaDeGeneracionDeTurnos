@@ -22,9 +22,9 @@ static void extract_year(char *original_year, size_t *year)
     sscanf(original_year, "%zu", year);
 }
 
-Hash_Patients *load_patients(lista_t *patient_csv_lines)
+HashPatients *load_patients(lista_t *patient_csv_lines)
 {
-    Hash_Patients *patient_register;
+    HashPatients *patient_register;
 
     if  ((patient_register = hash_patients_create(destroy_patient)) == NULL)
     {
