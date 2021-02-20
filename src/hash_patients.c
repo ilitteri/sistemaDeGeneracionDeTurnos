@@ -15,7 +15,7 @@ Hash_Patients *create_patients_hash(hash_destroy_patient destroy_patient)
     return patients;
 }
 
-bool save_patient(Hash_Patients *patients, const char *name, Patient *patient)
+bool save_patient(Hash_Patients *patients, Patient *patient)
 {
     return hash_guardar(patients, patient_name(patient), patient);
 }
