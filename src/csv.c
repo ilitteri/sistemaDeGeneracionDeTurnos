@@ -3,37 +3,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include "csv.h"
-#define SEPARADOR ','
+#define SEPARATION ','
 
-static void eliminar_fin_linea(char* linea) {
-	size_t len = strlen(linea);
-	if (linea[len - 1] == '\n') {
-		linea[len - 1] = '\0';
+static void remove_new_line(char* line) {
+	size_t len = strlen(line);
+	if (line[len - 1] == '\n') {
+		line[len - 1] = '\0';
 	}
 }
 
-lista_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
-	FILE* archivo = fopen(ruta_csv, "r");
-	if (!archivo) {
+lista_t* csv_create_strucure(const char* csv_path, void* (*creador) (char**, void*), void* extra) {
+	FILE* file = fopen(csv_path, "r");
+	if (!file) {
 		return NULL;
 	}
 	
-	lista_t* lista = lista_crear();
-	if (!lista) {
-		fclose(archivo);
+	lista_t* list = lista_crear();
+	if (!list) {
+		fclose(file);
 		return NULL;
 	}
 
-	char* linea = NULL;
+	char* line = NULL;
 	size_t c = 0;
-	while (getline(&linea, &c, archivo) > 0) {
-		eliminar_fin_linea(linea);
-		char** campos = split(linea, SEPARADOR);
-		lista_insertar_ultimo(lista, creador(campos, extra));
-		free_strv(campos);
+	while (getline(&line, &c, file) > 0) {
+		remove_new_line(line);
+		char** values = split(line, SEPARATION);
+		lista_insertar_ultimo(list, creador(values, extra));
+		free_strv(values);
 	}
-	free(linea);
-	fclose(archivo);
-	return lista;
+	free(line);
+	fclose(file);
+	return list;
 }
 
