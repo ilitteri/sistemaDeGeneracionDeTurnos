@@ -2,7 +2,7 @@
 #include <errno.h>        /* errno */
 #include <stdlib.h>       /* malloc, free, exit */
 
-#include "src/messages.h"
+#include "messages.h"
 #include "error_handling.h"
 
 int handle_command_error(int argc);
@@ -33,7 +33,7 @@ int handle_command_error(int argc)
 {
     if (argc != 3)
     {
-        printf(ERR_CMD_PARAMS_COUNT);
+        printf(ERR_PARAMS_COUNT);
         exit(EXIT_FAILURE);
     }
     return 0;
