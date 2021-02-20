@@ -15,9 +15,9 @@
 #define INFORME_DOCTOR "%zu: %s, especialidad %s, %zu paciente(s) atendido(s)\n"
 
 #define ENOENT_CANT_PARAMS "No se recibieron los 2 (dos) parametros: <archivo doctores> y <archivo pacientes>\n"
-#define ENOENT_ARCHIVO "No se pudo leer archivo %s\n"
-#define ENOENT_ANIO "Valor no numerico en campo de anio: %s\n"
-#define ENOENT_FORMATO "ERROR: formato de comando incorrecto ('%s')\n"
+#define ENOENT_FILE "No se pudo leer archivo %s\n"
+#define ENOENT_YEAR "Valor no numerico en campo de anio: %s\n"
+#define ENOENT_FORMAT "ERROR: formato de comando incorrecto ('%s')\n"
 #define ENOENT_CMD "ERROR: no existe el comando '%s'\n"
 
 #define ENOENT_PARAMS "ERROR: cantidad de parametros invalidos para comando '%s'\n"
