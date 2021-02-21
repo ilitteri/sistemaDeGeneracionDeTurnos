@@ -4,11 +4,16 @@
 #include "bst_doctors.h"
 #include "lista.h"
 
+void _doctor_destroy(void* doctor)
+{
+    doctor_destroy((Doctor *)doctor);
+}
+
 BSTDoctors *load_doctors(lista_t *doctor_csv_lines)
 {
     BSTDoctors *doctor_register;
 
-    if ((doctor_register = bst_doctors_create(strcmp, doctor_destroy)) == NULL)
+    if ((doctor_register = bst_doctors_create(strcmp, _doctor_destroy)) == NULL)
     {
         return NULL;
     }
