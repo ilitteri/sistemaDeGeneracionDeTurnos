@@ -6,14 +6,14 @@
 
 typedef struct Queue
 {
-    cola_t patients;
+    cola_t* patients;
     size_t cant;
 } QueuePatients;
 
 QueuePatients *queue_patients_create()
 {
     QueuePatients *urgent;
-    if ((urgent = cola_crear()) == NULL)
+    if ((urgent = malloc(sizeof(QueuePatients))) == NULL)
     {
         return NULL;
     }
@@ -46,10 +46,10 @@ bool queue_patients_enqueue(QueuePatients *urgent, Patient *patient)
 
 Patient *queue_patients_first(const QueuePatients *urgent)
 {
-    return (Patient *)cola_ver_primero((const cola_t *)patients);
+    return (Patient *)cola_ver_primero((const cola_t *) (urgent->patients));
 }
 
-Patient *queue_patients_dequeue(QueuePatients *patients)
+Patient *queue_patients_dequeue(QueuePatients *urgent)
 {
-    return (Patient *)cola_desencolar((cola_t *)patients);
+    return (Patient *)cola_desencolar(urgent->patients);
 }
