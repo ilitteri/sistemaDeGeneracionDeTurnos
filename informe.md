@@ -31,10 +31,10 @@
         - [Struct](#Struct-Hash-Pacientes)
         - [Funciones](#Funciones-Hash-Pacientes)
         - [Primitivas](#Primitivas-Hash-Pacientes)
-    - [Cola de Urgentes](#Cola-de-Urgentes)
-        - [Struct](#Struct-Cola-de-Urgentes)
-        - [Funciones](#Funciones-Cola-de-Urgentes)
-        - [Primitivas](#Primitivas-Cola-de-Urgentes)
+    - [Cola de Pacientes](#Cola-de-Pacientes)
+        - [Struct](#Struct-Cola-de-Pacientes)
+        - [Funciones](#Funciones-Cola-de-Pacientes)
+        - [Primitivas](#Primitivas-Cola-de-Pacientes)
     - [Hash de turnos](#Hash-de-turnos)
         - [Struct](#Struct-Hash-Turnos)
         - [Funciones](#Funciones-Hash-Turnos)
@@ -259,37 +259,47 @@ bool hash_patients_exists(const HashPatients *patients, const char *name);
 void hash_patients_destroy(HashPatients *patients);
 ```
 
-## Cola de Urgentes
+## Cola de Pacientes
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Cola de Urgentes
+### Struct Cola de Pacientes
 ```c
 typedef struct
 {
-    cola_t queue;
+    cola_t patients;
     size_t cant;
-} QueueUrgents;
+} QueuePatients;
 ```
 
-### Primitivas Cola de Urgentes
+### Primitivas Cola de Pacientes
 ```c
-/* Crea la estrucutra */
-QueueUrgents *queue_urgents_create();
+/* Crea la estructura */
+QueuePatients *queue_patients_create();
 
-/*  Destruye la estrucutura 
+/*  Destruye la estrucutura .
 *   Pre: la estructura fue creada.
 */
-void queue_urgents_destroy(QueueUrgents *queue, void (*destroy_patient) (Patient *patient));
+void queue_patients_destroy(QueuePatients *patients, void (*patients_destroy)(Patient *));
 
-/*  Encola un paciente
+/*  Informa si la cola se encuentra vacía (no modifica a la cola).
 *   Pre: la estructura fue creada.
 */
-bool queue_urgents_enqueue(QueueUrgents *queue, Patient *patient);
+bool queue_patients_is_empty(const QueuePatients *patients);
 
-/*  Desencola un paciente
+/*  Encola un paciente.
 *   Pre: la estructura fue creada.
 */
-Patient *queue_urgents_dequeue(QueueUrgents *queue);
+bool queue_patients_enqueue(QueuePatients *patients, Patient *patient);
+
+/*  Devuelve la información del primero en la cola, sin modificarla.
+*   Pre: la estrucura fue creada.
+*/
+Patient *queue_patients_first(const QueuePatients *patients);
+
+/*  Desencola un paciente.
+*   Pre: la estructura fue creada.
+*/
+Patient *queue_patients_dequeue(QueuePatients *patients);
 ```
 
 ## Hash de turnos
