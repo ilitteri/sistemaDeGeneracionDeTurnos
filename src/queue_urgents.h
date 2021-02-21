@@ -3,22 +3,26 @@
 #include "cola.h"
 #include "patient.h"
 
-typedef cola_t PriorityQueue;
+typedef struct
+{
+    cola_t patients;
+    size_t cant;
+} QueueUrgents;
 
 /* Crea la estrucutra */
-PriorityQueue *priority_queue_create();
+QueueUrgents *queue_urgents_create();
 
 /*  Destruye la estrucutura 
 *   Pre: la estructura fue creada.
 */
-void priority_queue_destroy(PriorityQueue *queue, void (*destroy_patient) (Patient *patient));
+void queue_urgents_destroy(QueueUrgents *queue, void (*destroy_patient) (Patient *patient));
 
 /*  Encola un paciente
 *   Pre: la estructura fue creada.
 */
-bool enqueue_patient(PriorityQueue *queue, Patient *patient);
+bool queue_urgents_enqueue(QueueUrgents *queue, Patient *patient);
 
 /*  Desencola un paciente
 *   Pre: la estructura fue creada.
 */
-Patient *dequeue_patient(PriorityQueue *queue);
+Patient *queue_urgents_dequeue(QueueUrgents *queue);

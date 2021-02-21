@@ -1,25 +1,45 @@
 #include <stdlib.h>
 
 #include "patient.h"
-#include "priority_queue.h"
+#include "queue_urgents.h"
+#include "queue_patients.h"
 
-PriorityQueue *priority_queue_create()
+typedef struct Queue
 {
-    PriorityQueue *queue;
-    return (queue = cola_crear()) == NULL ? NULL : queue;
+    QueuePatients patients;
+    size_t cant;
+} QueueUrgents;
+
+QueueUrgents *queue_urgents_create()
+{
+    QueueUrgents *urgents;
+    if ((urgents = malloc(sizeof(QueueUrgents))) == NULL)
+    {
+        return NULL;
+    }
+
+    if ((urgents->patients = queue_patients_create()) == NULL)
+    {
+        free(urgents);
+        return NULL;
+    }
+
+    urgents->cant = 0;
+
+    return urgents;
 }
 
-void priority_queue_destroy(PriorityQueue *queue, void (*destroy_patient) (Patient *patient))
+void queue_urgents_destroy(QueueUrgents *urgents)
 {
-    cola_destruir(queue, destroy_patient);
+    queue_patients_destroy(urgents->patients);
 }
 
-bool enqueue_patient(PriorityQueue *queue, Patient *patient)
+bool queue_urgents_enqueue(QueueUrgents *urgents, Patient *patient)
 {
-    return cola_encolar(queue, patient);
+    return queue_patients_enqueue(urgents->patients, patient);
 }
 
-Patient *dequeue_patient(PriorityQueue *queue)
+Patient *queue_urgents_dequeue(QueueUrgents *urgents)
 {
-    return (Patient) cola_desencolar(queue);
+    return queue_patients_dequeue(urgents->patients);
 }
