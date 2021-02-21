@@ -18,12 +18,31 @@
     - [Fase de salida](#Fase-de-salida)
 - [Estructuras de datos](#Estructuras-de-datos)
     - [Doctor](#Doctor)
+        - [Struct Doctor](#Struct-Doctor)
+        - [Primitivas Doctor](#Primitivas-Doctor)
     - [Paciente](#Paciente)
+        - [Struct](#Struct-Paciente)
+        - [Primitivas](#Primitivas-Paciente)
     - [Árbol de doctores](#Árbol-de-doctores)
+        - [Struct](#Struct-Árbol-de-Doctores)
+        - [Funciones](#Funciones-Árbol-de-Doctores)
+        - [Primitivas](#Primitivas-Árbol-de-Doctores)
     - [Hash de pacientes](#Hash-de-pacientes)
-    - [Cola de prioridad](#Cola-de-prioridad)
-    - [Hash de turnos regulares y turnos urgentes](#Hash-de-turnos-regulares-y-turnos-urgentes)
-    - [Heap de pacientes con turno regular](#Heap-de-pacientes-con-turno-regular)
+        - [Struct](#Struct-Hash-Pacientes)
+        - [Funciones](#Funciones-Hash-Pacientes)
+        - [Primitivas](#Primitivas-Hash-Pacientes)
+    - [Cola de Urgentes](#Cola-de-Urgentes)
+        - [Struct](#Struct-Cola-de-Urgentes)
+        - [Funciones](#Funciones-Cola-de-Urgentes)
+        - [Primitivas](#Primitivas-Cola-de-Urgentes)
+    - [Hash de turnos](#Hash-de-turnos)
+        - [Struct](#Struct-Hash-Turnos)
+        - [Funciones](#Funciones-Hash-Turnos)
+        - [Primitivas](#Primitivas-Hash-Turnos)
+    - [Heap de Regulares](#Heap-de-Regulares)
+        - [Struct](#Struct-Heap-de-Regulares)
+        - [Funciones](#Funciones-Heap-de-Regulares)
+        - [Primitivas](#Primitivas-Heap-de-Regulares)
 - [Código del programa](#Código-del-programa)
 
 # Datos Personales del Grupo
@@ -101,7 +120,7 @@ Manejo de errores y devolución de la fase la buena fase.
 ## Doctor
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Doctor
 ```c
 typedef struct
 {
@@ -110,19 +129,47 @@ typedef struct
     int attended_patients;
 } Doctor;
 ```
-### Primitivas
+### Primitivas Doctor
 
 ```c
-char *get_name(Doctor *d)
-char *get_specialty(Doctor *d);
-int get_attended_patients(Doctor *d);
-void attend_patient(Doctor *d);
+/* Registra un doctor, 
+*  recibe el nombre 
+*  y la especialidad
+*/
+Doctor *doctor_check_in(char *name, char *specialty);
+
+/* Obtiene el nombre del doctor 
+*  Pre: el doctor fue registrado
+*  Post: devuelve nombre de doctor
+*/
+char *doctor_name(const Doctor *doctor);
+
+/* Obtiene la especialidad del doctor 
+*  Pre: el doctor fue registrado
+*  Post: devuelve la especialidad de doctor
+*/
+char *doctor_specialty(const Doctor *doctor);
+
+/* Obtiene la cantidad de pacientes atendidos por el doctor
+*  Pre: el doctor fue registrado
+*  Post: devuelve la cantidad de pacientes atendidos por el doctor
+*/
+int doctor_attended_patients(const Doctor *doctor);
+
+/* Suma 1 a la cantidad de pacientes atendidos por el doctor
+*  Pre: el doctor fue registrado
+*  Post: la cantidad de pacientes es atendidos aumento 1
+*/
+void doctor_attend_patient(Doctor *doctor);
+
+/* Destruye los datos del doctor */
+void doctor_destroy(Doctor *doctor);
 ```
 
 ## Paciente
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct 
+### Struct Paciente
 ```c
 typedef struct
 {
@@ -131,7 +178,7 @@ typedef struct
 } Patient;
 ```
 
-### Primitivas
+### Primitivas Paciente
 ```c
 /* Registra un paciente */
 Patient *patient_check_in(char *name, size_t entry_year);
@@ -152,29 +199,46 @@ size_t patient_entry_year(const Patient *patient);
 ## Árbol de doctores
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Árbol de Doctores
 ```c
-typedef abb_t BST_Doctors;
+typedef abb_t BSTDoctors;
 ```
 
-### Primitivas
+### Funciones Árbol de Doctores
 ```c
-BST_Doctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data);
-bool bst_save_doctor(BST_Doctors *doctors, const char *doctor_name, Doctor *d);
-Doctor *bst_remove_doctor(BST_Doctors *doctors, const char *doctor_name);
-Doctor *bst_get_doctor(cont BST_Doctors *doctors, const char *doctor_name);
-void bst_doctors_destroy(BST_Doctors *doctors);
+typedef abb_comparar_clave_t bst_key_cmp;
+typedef abb_destruir_dato_t bst_doctor_destroy;
+```
+### Primitivas Árbol de Doctores
+```c
+/* Crea la estructura */
+BSTDoctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data);
+
+/* Guarda un doctor en la estrucutra
+*  Pre: la estrucutra fue creada, se registró al doctor.
+*  Pos: se guarda al doctor en la estructura.
+*/
+bool bst_doctors_save_doctor(BSTDoctors *doctors, const char *doctor_name, Doctor *doctor);
+
+/* Devuelve el struct doctor correspondiente al nombre de este.
+*  Pre: la estrucutra fue creada, se registró al doctor y se guardp en la estructura.
+*  Pos: se devulve el doctor correspondiente.
+*/
+Doctor *bst_doctors_get_doctor(const BSTDoctors *doctors, const char *doctor_name);
+
+/* Destruye la estructura y sus datos si bst_doctor_destroy es distinto de NULL */
+void bst_doctors_destroy(BSTDoctors *doctors);
 ```
 
 ## Hash de pacientes
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Hash Pacientes
 ```c
-typedef hash_t Hash_Patients;
+typedef hash_t HashPatients;
 ```
 
-### Primitivas
+### Primitivas Hash Pacientes
 ```c
 /* Crea la estructura */
 HashPatients *hash_patients_create(hash_destroy_patient destroy_data);
@@ -195,44 +259,48 @@ bool hash_patients_exists(const HashPatients *patients, const char *name);
 void hash_patients_destroy(HashPatients *patients);
 ```
 
-## Cola de prioridad
+## Cola de Urgentes
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Cola de Urgentes
 ```c
-typedef cola_t Priority_Queue; // ¿COMO CUENTO LA CANTIDAD DE PACIENTES RESTANTES?
+typedef struct
+{
+    cola_t queue;
+    size_t cant;
+} QueueUrgents;
 ```
 
-### Primitivas
+### Primitivas Cola de Urgentes
 ```c
 /* Crea la estrucutra */
-PriorityQueue *priority_queue_create();
+QueueUrgents *queue_urgents_create();
 
 /*  Destruye la estrucutura 
 *   Pre: la estructura fue creada.
 */
-void priority_queue_destroy(PriorityQueue *queue, void (*destroy_patient) (Patient *patient));
+void queue_urgents_destroy(QueueUrgents *queue, void (*destroy_patient) (Patient *patient));
 
 /*  Encola un paciente
 *   Pre: la estructura fue creada.
 */
-bool enqueue_patient(PriorityQueue *queue, Patient *patient);
+bool queue_urgents_enqueue(QueueUrgents *queue, Patient *patient);
 
 /*  Desencola un paciente
 *   Pre: la estructura fue creada.
 */
-Patient *dequeue_patient(PriorityQueue *queue);
+Patient *queue_urgents_dequeue(QueueUrgents *queue);
 ```
 
-## Hash de turnos regulares y turnos urgentes
+## Hash de turnos
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Hash Turnos
 ```c
 typedef hash_t Hash_Turns;
 ```
 
-### Primitivas
+### Primitivas Hash Turnos
 ```c
 Hash_Turns *hash_turns_create(hash_turn_destroy destroy_data);
 bool hash_turns_save(Hash_Turns *turns, const char *specialty, Patient *patient);
@@ -240,21 +308,21 @@ bool hash_turns_specialty_exists(const Hash_Turns *turns, const char *specialty)
 void hash_turns_destroy(Hash_Turns *turns);
 ```
 
-## Heap de pacientes con turno regular
+## Heap de Regulares
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct
+### Struct Heap de Regulares
 ```c
 typedef heap_t Heap_Turns;
 ```
 
-### Primitivas
+### Primitivas Heap de Regulares
 ```c
-Heap_Turns *heap_turns_create(heap_key_cmp cmp);
-void heap_turns_destroy(Heap_Turns *turns, void (*destroy_turn) (Patient *p));
-size_t heap_turns_count(const Heap_Turns *turns);
-bool heap_turns_enqueue(const Heap_Turns *turns);
-Heap_Turns *heap_turns_dequeue(Heap_Turns *turns); 
+Heap_Turns *heap_regulars_create(heap_key_cmp cmp);
+void heap_regulars_destroy(Heap_Turns *turns, void (*destroy_turn) (Patient *p));
+size_t heap_regulars_count(const Heap_Turns *turns);
+bool heap_regulars_enqueue(const Heap_Turns *turns);
+Heap_Turns *heap_regulars_dequeue(Heap_Turns *turns); 
 ```
 
 # Código del programa
