@@ -46,19 +46,10 @@ HashPatients *load_patients(lista_t *patient_csv_lines)
 
         char **patient_data = lista_iter_ver_actual(list_iter);
 
-        char *name;
-
-        if ((name = extract_name(patient_data[0])) == NULL)
-        {
-            lista_iter_destruir(list_iter);
-            hash_patients_destroy(patient_register);
-            return NULL;
-        }
-
         size_t year;
         extract_year(patient_data[1], &year);
 
-        if ((patient = patient_check_in(name, year)) == NULL)
+        if ((patient = patient_check_in(patient_data[0], year)) == NULL)
         {
             lista_iter_destruir(list_iter);
             hash_patients_destroy(patient_register);

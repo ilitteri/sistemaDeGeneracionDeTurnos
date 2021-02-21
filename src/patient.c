@@ -8,6 +8,17 @@ typedef struct
     size_t entry_year;
 } Patient;
 
+static char *copy_name(char *original_name)
+{   
+    char *name = malloc(strlen(original_name) + 1);
+    if (name == NULL)
+    {
+        return NULL;
+    }
+    strcpy(name, original_name);
+    return name;
+}
+
 Patient *patient_check_in(char *name, size_t year)
 {
     Patient *patient;
@@ -17,7 +28,14 @@ Patient *patient_check_in(char *name, size_t year)
         return NULL;
     }
 
-    patient->name = name;
+    char *name_cpy;
+    if ((name_cpy = copy_name(name)) == NULL)
+    {
+        free(patient);
+        return NULL;
+    }
+
+    patient->name = name_cpy;
     patient->entry_year = year;
 
     return patient;
@@ -35,6 +53,6 @@ size_t patient_entry_year(const Patient *patient)
 
 void destroy_patient(Patient *patient)
 {
-    // free(name)
+    free(patient->name);
     free(patient);
 }
