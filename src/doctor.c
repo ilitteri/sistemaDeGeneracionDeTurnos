@@ -2,9 +2,10 @@
 #include <string.h>
 #include "doctor.h"
 
-typedef struct Doctor{
-    char* name;
-    char* specialty;
+typedef struct Doctor
+{
+    char *name;
+    char *specialty;
     int attended_patiens;
 } Doctor;
 
@@ -12,11 +13,12 @@ Doctor *doctor_check_in(char *name, char *specialty)
 {
     Doctor *doctor;
 
-    if ((doctor = malloc(sizeof(Doctor))) == NULL){
+    if ((doctor = malloc(sizeof(Doctor))) == NULL)
+    {
         return NULL;
     }
 
-    char* name_copy, specialty_copy;
+    char *name_copy, specialty_copy;
     if ((name_copy = malloc(strlen(name) + 1)) == NULL)
     {
         free(doctor);
@@ -40,27 +42,27 @@ Doctor *doctor_check_in(char *name, char *specialty)
     return doctor;
 }
 
-char *get_name(const Doctor *doctor)
+char *doctor_name(const Doctor *doctor)
 {
     return doctor->name;
 }
 
-char *get_specialty(const Doctor *doctor)
+char *doctor_specialty(const Doctor *doctor)
 {
     return doctor->specialty;
 }
 
-int get_attended_patients(const Doctor *doctor)
+int doctor_attended_patients(const Doctor *doctor)
 {
     return doctor->attended_patiens;
 }
 
-void attend_patient(Doctor *doctor)
+void doctor_attend_patient(Doctor *doctor)
 {
     doctor->attended_patiens++;
 }
 
-void destroy_doctor(Doctor *doctor)
+void doctor_destroy(Doctor *doctor)
 {
     free(doctor->name);
     free(doctor->specialty);
