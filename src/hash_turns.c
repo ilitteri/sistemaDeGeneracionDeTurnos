@@ -3,8 +3,8 @@
 
 #include "hash.h"
 #include "hash_turns.h"
-#include "priority_queue.h"
-#include "priority_heap.h"
+#include "queue_patients.h"
+#include "heap_patients.h"
 
 typedef enum Priority
 {
@@ -78,7 +78,7 @@ static bool add_urgent_specialty(hash_t *urgent, char* specialty)
     if (!hash_pertenece(urgent, specialty))
     {
         PriorityQueue *waiting_patients;
-        if ((waiting_patients = priority_queue_create()) == NULL)
+        if ((waiting_patients = queue_patients_create()) == NULL)
         {
             return false;
         }
@@ -92,7 +92,7 @@ static bool add_regular_specialty(hash_t *regular, char* specialty)
     if (!hash_pertenece(regular, specialty))
     {
         PriorityHeap *waiting_patients;
-        if ((waiting_patients = priority_heap_create()) == NULL)
+        if ((waiting_patients = heap_patients_create()) == NULL)
         {
             return false;
         }
@@ -109,8 +109,8 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
 
     if (!ok)
     {
-        priority_queue_destroy(hash_borrar(turns->urgent, specialty));
-        priority_heap_destroy(hash_borrar(turns->regular, specialty));
+        queue_patients_destroy(hash_borrar(turns->urgent, specialty));
+        heap_patients_destroy(hash_borrar(turns->regular, specialty));
         return false;
     }
 
