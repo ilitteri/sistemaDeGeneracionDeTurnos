@@ -41,7 +41,13 @@ bool queue_patients_is_empty(const QueuePatients *urgent)
 
 bool queue_patients_enqueue(QueuePatients *urgent, Patient *patient)
 {  
-    return cola_encolar(urgent->patients, (void *)patient);
+    if (!cola_encolar(urgent->patients, (void *)patient))
+    {
+        return false;
+    }
+    
+    urgent->cant++;
+    return true;
 }
 
 Patient *queue_patients_first(const QueuePatients *urgent)
@@ -51,5 +57,13 @@ Patient *queue_patients_first(const QueuePatients *urgent)
 
 Patient *queue_patients_dequeue(QueuePatients *urgent)
 {
-    return (Patient *)cola_desencolar(urgent->patients);
+    Patient* patient = (Patient *)cola_desencolar(urgent->patients);
+
+    if (patient == NULL)
+    {
+        return NULL;
+    }
+
+    urgent->cant--;
+    return patient;
 }
