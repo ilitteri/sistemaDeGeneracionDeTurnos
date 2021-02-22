@@ -220,10 +220,16 @@ BSTDoctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data)
 bool bst_doctors_save_doctor(BSTDoctors *doctors, const char *doctor_name, Doctor *doctor);
 
 /* Devuelve el struct doctor correspondiente al nombre de este.
-*  Pre: la estrucutra fue creada, se registró al doctor y se guardp en la estructura.
+*  Pre: la estrucutra fue creada, se registró al doctor y se guardó en la estructura.
 *  Pos: se devulve el doctor correspondiente.
 */
 Doctor *bst_doctors_get_doctor(const BSTDoctors *doctors, const char *doctor_name);
+
+/* Informa la cantidad de doctores que hay en la estructura.
+*  Pre: la estrucutra fue creada, se registró al doctor y se guardó en la estructura
+*  Pos: devuelve la cantidada de doctores doctor registrados en la estructura.
+*/
+size_t bst_doctors_count(BSTDoctors *doctors);
 
 /* Destruye la estructura y sus datos si bst_doctor_destroy es distinto de NULL */
 void bst_doctors_destroy(BSTDoctors *doctors);
@@ -240,7 +246,7 @@ typedef hash_t HashPatients;
 ### Primitivas Hash Pacientes
 ```c
 /* Crea la estructura */
-HashPatients *hash_patients_create(hash_destroy_patient destroy_data);
+HashPatients *hash_patients_create(hash_destroy_patient patient_destroy);
 
 /*  Guarda un paciente en la estrucutra
 *   Pre: la estrucutra fue creada, se registró al paciente.
