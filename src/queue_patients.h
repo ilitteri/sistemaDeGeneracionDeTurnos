@@ -2,8 +2,11 @@
 
 #include "patient.h"
 
-struct Queue;
+/* Struct */
+
 typedef struct Queue QueuePatients;
+
+/* Primitivas */
 
 /* Crea la estructura */
 QueuePatients *queue_patients_create();
@@ -32,3 +35,8 @@ Patient *queue_patients_first(const QueuePatients *patients);
 *   Pre: la estructura fue creada.
 */
 Patient *queue_patients_dequeue(QueuePatients *patients);
+
+/*  Informa la cantidad de pacientes en espera.
+*   Pre: la estructura fue creada.
+*/
+size_t queue_patients_count(QueuePatients *urgent);

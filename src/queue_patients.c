@@ -6,8 +6,8 @@
 
 typedef struct Queue
 {
-    cola_t* patients;
-    size_t cant;
+    cola_t *patients;
+    size_t count;
 } QueuePatients;
 
 QueuePatients *queue_patients_create()
@@ -24,7 +24,7 @@ QueuePatients *queue_patients_create()
         return NULL;
     }
 
-    urgent->cant = 0;
+    urgent->count = 0;
 
     return urgent;
 }
@@ -46,7 +46,7 @@ bool queue_patients_enqueue(QueuePatients *urgent, Patient *patient)
         return false;
     }
     
-    urgent->cant++;
+    urgent->count++;
     return true;
 }
 
@@ -64,6 +64,11 @@ Patient *queue_patients_dequeue(QueuePatients *urgent)
         return NULL;
     }
 
-    urgent->cant--;
+    urgent->count--;
     return patient;
+}
+
+size_t queue_patients_count(QueuePatients *urgent)
+{
+    return urgent->count;
 }
