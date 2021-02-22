@@ -3,11 +3,11 @@
 #include "hash_patients.h"
 #include "patient.h"
 
-HashPatients *hash_patients_create(hash_destroy_patient destroy_patient)
+HashPatients *hash_patients_create(hash_destroy_patient patient_destroy)
 {
     HashPatients *patients;
 
-    if ((patients = hash_crear(destroy_patient)) == NULL)
+    if ((patients = hash_crear(patient_destroy)) == NULL)
     {
         return NULL;
     }
