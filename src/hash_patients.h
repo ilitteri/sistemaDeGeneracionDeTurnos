@@ -21,5 +21,10 @@ bool hash_patients_save(HashPatients *patients, Patient *patient);
 */
 bool hash_patients_exists(const HashPatients *patients, const char *name);
 
+/*  Devuelve un paciente
+*   Pre: la estrucutra fue creada, se registró al paciente.
+*/
+Patient *hash_patients_get(const HashPatients *patients, const char *name);
+
 /* Destruye la estrucura y sus datos en caso de existir remanentes */
 void hash_patients_destroy(HashPatients *patients);
