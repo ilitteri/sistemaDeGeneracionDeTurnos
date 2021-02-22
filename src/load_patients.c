@@ -6,17 +6,6 @@
 #include "hash_patients.h"
 #include "lista.h"
 
-static char *extract_name(char *original_name)
-{   
-    char *name = malloc(strlen(original_name) + 1);
-    if (name == NULL)
-    {
-        return NULL;
-    }
-    strcpy(name, original_name);
-    return name;
-}
-
 static void extract_year(char *original_year, size_t *year)
 {
     sscanf(original_year, "%zu", year);
