@@ -87,17 +87,41 @@ static bool add_urgent_specialty(hash_t *urgent, char* specialty)
     return true;
 }
 
+int patient_entry_year_cmp(const void *n, const void *m)
+{
+    if (n == NULL && m == NULL)
+    {
+        return 0;
+    }
+
+    else if (n == NULL || m == NULL)
+    {
+        return n == NULL ? -1 : 1;
+    }
+
+    size_t n_year = patient_entry_year((Patient *)n);
+    size_t m_year = patient_entry_year((Patient *)m);
+
+    return n_year == m_year ? 0 : n_year > m_year ? 1 : -1; 
+}
+
 static bool add_regular_specialty(hash_t *regular, char* specialty)
 {
     if (!hash_pertenece(regular, specialty))
     {
         HeapPatients *waiting_patients;
-        if ((waiting_patients = heap_regulars_create()) == NULL)
+        if ((waiting_patients = heap_patients_create(patient_entry_year_cmp)) == NULL)
         {
             return false;
         }
         hash_guardar(regular, specialty, waiting_patients);
     }
+
+    else
+    {
+        return false;
+    }
+    
     return true;
 }
 
