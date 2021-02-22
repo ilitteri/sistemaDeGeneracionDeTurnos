@@ -7,12 +7,12 @@ typedef heap_t HeapPatients;
 
 typedef cmp_func_t HeapPatients_cmp;
 
-Heap_Turns *heap_regulars_create(HeapPatients_cmp cmp);
+HeapPatients *heap_patients_create(HeapPatients_cmp cmp);
 
-void heap_regulars_destroy(Heap_Turns *turns, void (*patient_destroy) (Patient *p));
+void heap_patients_destroy(HeapPatients *turns, void (*patient_destroy) (Patient *p));
 
-size_t heap_regulars_count(const Heap_Turns *turns);
+size_t heap_patients_count(const HeapPatients *turns);
 
-bool heap_regulars_enqueue(const Heap_Turns *turns);
+bool heap_patients_enqueue(const HeapPatients *turns);
 
-Heap_Turns *heap_regulars_dequeue(Heap_Turns *turns); 
+HeapPatients *heap_patients_dequeue(HeapPatients *turns); 
