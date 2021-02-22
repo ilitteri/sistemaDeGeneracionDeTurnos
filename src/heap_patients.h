@@ -7,7 +7,7 @@
 
 typedef heap_t HeapPatients;
 
-/* Funciones de la estructura * /
+/* Funciones de la estructura */
 
 typedef cmp_func_t HeapPatients_cmp;
 
@@ -32,10 +32,10 @@ size_t heap_patients_count(const HeapPatients *turns);
 *   Pre: la estructura fué creada.
 *   Pos: devuelve si el paciente se encoló correctamente.
 */
-bool heap_patients_enqueue(const HeapPatients *turns);
+bool heap_patients_enqueue(const HeapPatients *turns, Patient *patient);
 
 /*  Desencola un paciente.
 *   Pre: la estructura fué creada.
 *   Pos: devuelve el paciente desencolado.
 */  
-HeapPatients *heap_patients_dequeue(HeapPatients *turns); 
+HeapPatients *heap_patients_dequeue(HeapPatients *turns);
