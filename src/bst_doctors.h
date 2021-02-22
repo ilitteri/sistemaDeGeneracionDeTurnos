@@ -29,3 +29,14 @@ Doctor *bst_doctors_get_doctor(const BSTDoctors *doctors, const char *doctor_nam
 
 /* Destruye la estructura y sus datos si bst_doctor_destroy es distinto de NULL */
 void bst_doctors_destroy(BSTDoctors *doctors);
+
+/* ITERADOR INTERNO */
+
+/* Implementa el iterador interno, que recorre el arbol in-order.
+   "visitar" es una función de callback que recibe la clave, el valor y un
+   puntero extra, y devuelve true si se debe seguir iterando, false en caso
+   contrario).
+ */
+void bst_doctors_in_order(BSTDoctors *doctors,
+                  bool visit(const char *, void *, void *),
+                  Report *report);

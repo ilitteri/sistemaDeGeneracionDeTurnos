@@ -29,3 +29,8 @@ void bst_doctors_destroy(BSTDoctors *doctors)
 {
     abb_destruir(doctors);
 }
+
+void bst_doctors_in_order(BSTDoctors *doctors, bool visit(const char *, void *, void *), Report *report)
+{
+    abb_in_order(doctors, visit, (void *)report);
+}
