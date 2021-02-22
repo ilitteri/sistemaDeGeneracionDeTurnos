@@ -12,7 +12,7 @@ typedef enum Priority
     REGULAR
 } Priority;
 
-typedef struct 
+typedef struct Hash
 {
     hash_t *urgent;
     hash_t *regular;
@@ -32,13 +32,13 @@ HashTurns *hash_turns_create()
         return NULL;
     }
 
-    if ((turns->urgent = hash_crear(cola_destruir)) == NULL)
+    if ((turns->urgent = hash_crear(queue_patients_destroy)) == NULL)
     {
         free(turns);
         return NULL;
     }
 
-    if ((turns->regular = hash_crear(heap_destruir)) == NULL)
+    if ((turns->regular = hash_crear(heap_patients_destroy)) == NULL)
     {
         free(turns->urgent);
         free(turns);
@@ -77,7 +77,7 @@ static bool add_urgent_specialty(hash_t *urgent, char* specialty)
 {
     if (!hash_pertenece(urgent, specialty))
     {
-        PriorityQueue *waiting_patients;
+        QueuePatients *waiting_patients;
         if ((waiting_patients = queue_patients_create()) == NULL)
         {
             return false;
@@ -91,8 +91,8 @@ static bool add_regular_specialty(hash_t *regular, char* specialty)
 {
     if (!hash_pertenece(regular, specialty))
     {
-        PriorityHeap *waiting_patients;
-        if ((waiting_patients = heap_patients_create()) == NULL)
+        HeapPatients *waiting_patients;
+        if ((waiting_patients = heap_regulars_create()) == NULL)
         {
             return false;
         }
