@@ -15,7 +15,7 @@
 #include "hash_turns.h"
 #include "bst_doctors.h"
 
-HashTurns *init_hash_turns(lista_t *doctor_csv_lines)
+HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
 {
     HashTurns *turns;
 
