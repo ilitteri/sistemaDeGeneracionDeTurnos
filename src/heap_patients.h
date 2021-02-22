@@ -38,4 +38,4 @@ bool heap_patients_enqueue(const HeapPatients *turns, Patient *patient);
 *   Pre: la estructura fué creada.
 *   Pos: devuelve el paciente desencolado.
 */  
-HeapPatients *heap_patients_dequeue(HeapPatients *turns);
+Patient *heap_patients_dequeue(HeapPatients *turns);

@@ -25,7 +25,7 @@ bool heap_patients_enqueue(const HeapPatients *turns, Patient *patient)
     return heap_encolar(turns, (void *)patient);
 }
 
-HeapPatients *heap_patients_dequeue(HeapPatients *turns)
+Patient *heap_patients_dequeue(HeapPatients *turns)
 {
-    return (HeapPatients *)heap_desencolar(turns);
+    return (Patient *)heap_desencolar(turns);
 }
