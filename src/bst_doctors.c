@@ -25,6 +25,11 @@ Doctor *bst_doctors_get_doctor(const BSTDoctors *doctors, const char *doctor_nam
     return (Doctor *)abb_obtener(doctors, doctor_name);
 }
 
+size_t bst_doctors_count(BSTDoctors *doctors)
+{
+    return abb_cantidad(doctors);
+}
+
 void bst_doctors_destroy(BSTDoctors *doctors)
 {
     abb_destruir(doctors);
