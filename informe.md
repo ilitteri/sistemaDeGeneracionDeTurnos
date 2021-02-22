@@ -48,8 +48,6 @@
 # Datos Personales del Grupo
 [*Indice*](#Tabla-de-Contenidos)
 
----
-
 ## Integrantes
 
 - Millares Faustino.
@@ -60,20 +58,21 @@
 - Ezequiel Genender
 
 # Análisis y Diseño (pre-escritura)
----
 
 ## Fase de iniciación 
 [*Indice*](#Tabla-de-Contenidos)
 
 ### 1. Primera entrada del programa
 
-El programa recibe como argumentos dos archivos en formato CSV.
+El comando de ejecución del proyecto incluye 2 parámetros. Ambos son nombres de archivos CSV, el primero corresponde a el archivo CSV de doctores, el segundo corresponde a un archivo CSV de pacientes.
 
 ### 2. Manejo de errores de la primera entrada del programa
 
-Hay que manejar los posibles errores que pueden llegar a aparecer, entre ellos:
+Se manejan los posibles errores que pueden llegar a aparecer, entre ellos:
 - que se reciban menos, o más de dos parámetros,
-- que alguno de los archivos, o ambos no existan.
+- que alguno de los archivos no se puedan leer.
+
+En caso de que alguno de estoy ocurra, la ejecución del programa se aborta con un exit con errno 1.
 
 ### 3. Lectura de CSV
 
@@ -89,7 +88,7 @@ Hay que manejar los posibles errores que pueden llegar a aparecer luego de la le
 
 ### 5. Almacenamiento de datos del archivo CSV de doctores
 
-Se tiene que recorrer la lista de líneas del archivo de doctores, parsear a la misma, y en este caso utilizaremos un struct para cada doctor, la que contendrá la información de su especialidad y la cantidad de pacientes que atendió.
+Se tiene que recorrer la lista de líneas del archivo de doctores, parsear a las mismas, y en este caso utilizaremos un struct para cada doctor, la que contendrá la información de su especialidad y la cantidad de pacientes que atendió.
 
 Cada uno de estos doctores, se almacenará en una estructura de *árbol binario de búsqueda*, para cumplir con la complejidad pedida para el *comando informe doctores*, que debe ser *O(d)* en el peor caso (en el que se tenga que mostrar todos los doctores del sistema), *O(log d)* en un caso promedio (en el caso en el que no se pidan mostrar demasiados doctores). Y la estructura elegida cumple con esto. Las claves en dicha estructura corresponderán a el nombre de doctor, y su valor será la estructura mencionada en el párrafo anterior.
 
