@@ -36,7 +36,7 @@ void queue_patients_destroy(QueuePatients *urgent, void (*patients_destroy)(Pati
 
 bool queue_patients_is_empty(const QueuePatients *urgent)
 {
-    return cola_esta_vacia((const cola_t *) urgent->patients);
+    return cola_esta_vacia(urgent->patients);
 }
 
 bool queue_patients_enqueue(QueuePatients *urgent, Patient *patient)
@@ -52,7 +52,7 @@ bool queue_patients_enqueue(QueuePatients *urgent, Patient *patient)
 
 Patient *queue_patients_first(const QueuePatients *urgent)
 {
-    return (Patient *)cola_ver_primero((const cola_t *) (urgent->patients));
+    return (Patient *)cola_ver_primero(urgent->patients);
 }
 
 Patient *queue_patients_dequeue(QueuePatients *urgent)
