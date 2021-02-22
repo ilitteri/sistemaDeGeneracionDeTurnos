@@ -2,6 +2,7 @@
 
 #include "abb.h"
 #include "doctor.h"
+#include "report.h"
 
 /* Tipos de función para comparar claves y destruir datos. */
 typedef abb_comparar_clave_t bst_key_cmp;
