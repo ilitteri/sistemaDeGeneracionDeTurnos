@@ -3,11 +3,11 @@
 
 #include <stdlib.h>
 
-#include "lista.h"
+#include "../basic_tda/lista.h"
 
-#include "hash_patients.h"
-#include "hash_turns.h"
-#include "bst_doctors.h"
+#include "../our_tda/patient/hash_patients.h"
+#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/doctor/bst_doctors.h"
 
 /* 
 *   Crea el esqueleto del diccionario de turnos urgentes y regulares utilizando

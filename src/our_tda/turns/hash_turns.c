@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>m
 
 #include "../../basic_tda/hash.h"
 #include "hash_turns.h"
@@ -8,11 +9,8 @@
 #include "../doctor/doctor.h"
 #include "../patient/patient.h"
 
-typedef enum Priority
-{
-    URGENT,
-    REGULAR
-} Priority;
+#define URGENT "URGENTE"
+#define REGULAR "REGULAR"
 
 typedef struct Hash
 {
@@ -60,14 +58,14 @@ static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
     return heap_patients_enqueue((HeapPatients *)hash_obtener(regular, specialty), patient);
 }
 
-bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient)
+bool hash_turns_add_turn(HashTurns *turns, char* urgency, char *specialty, Patient *patient)
 {
-    if (urgency == URGENT)
+    if (strcmp(urgency, URGENT) == 0)
     {
         return add_urgent_turn(turns->urgent, specialty, patient);
     }
 
-    else if (urgency == REGULAR)
+    else if (strcmp(urgency, REGULAR) == 0)
     {
         return add_regular_turn(turns->regular, specialty, patient);
     }
@@ -165,14 +163,14 @@ bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
     return hash_pertenece(turns, specialty);
 }
 
-size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty)
+size_t hash_turns_specialty_count(HashTurns *turns, char *urgency, char *specialty)
 {
-    if (urgency == URGENT)
+    if (strcmp(urgency, URGENT) == 0)
     {
         return queue_patients_count(hash_obtener(turns->urgent, specialty));
     }
 
-    else if (urgency == REGULAR)
+    else if (strcmp(urgency, REGULAR) == 0)
     {
         return heap_patients_count(hash_obtener(turns->regular, specialty));
     }
