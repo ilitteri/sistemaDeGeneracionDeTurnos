@@ -23,39 +23,40 @@ typedef struct heap
 
 /* Declaracion de funciones auxiliares */
 
-void swap(void **datos, size_t i, size_t j);
-size_t obtener_pos_padre(size_t i);
-size_t obtener_pos_hijo_izq(size_t i);
-size_t obtener_pos_hijo_der(size_t i);
-void upheap(void **datos, size_t i, cmp_func_t cmp);
-void downheap(void **datos, size_t cant, size_t actual, cmp_func_t cmp);
-bool redimensionar(heap_t *heap, size_t nuevo_tam);
-void heapify(void *elementos[], size_t n, cmp_func_t cmp);
+static void swap(void **datos, size_t i, size_t j);
+static size_t obtener_pos_padre(size_t i);
+static size_t obtener_pos_hijo_izq(size_t i);
+static size_t obtener_pos_hijo_der(size_t i);
+static void upheap(void **datos, size_t i, cmp_func_t cmp);
+static void downheap(void **datos, size_t cant, size_t actual, cmp_func_t cmp);
+static bool redimensionar(heap_t *heap, size_t nuevo_tam);
+static void heapify(void *elementos[], size_t n, cmp_func_t cmp);
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp);
+static heap_t *_heap_crear(size_t tam, size_t cant, cmp_func_t cmp);
 
-void swap(void **datos, size_t i, size_t j)
+static void swap(void **datos, size_t i, size_t j)
 {
     void *temp = datos[i];
     datos[i] = datos[j];
     datos[j] = temp;
 }
 
-size_t obtener_pos_padre(size_t i)
+static size_t obtener_pos_padre(size_t i)
 {
     return (i - 1) / 2;
 }
 
-size_t obtener_pos_hijo_izq(size_t i)
+static size_t obtener_pos_hijo_izq(size_t i)
 {
     return i * 2 + 1;
 }
 
-size_t obtener_pos_hijo_der(size_t i)
+static size_t obtener_pos_hijo_der(size_t i)
 {
     return i * 2 + 2;
 }
 
-void upheap(void **datos, size_t i, cmp_func_t cmp)
+static void upheap(void **datos, size_t i, cmp_func_t cmp)
 {
     if (i == 0)
     {
@@ -70,7 +71,7 @@ void upheap(void **datos, size_t i, cmp_func_t cmp)
     }
 }
 
-void downheap(void **datos, size_t cant, size_t actual, cmp_func_t cmp)
+static void downheap(void **datos, size_t cant, size_t actual, cmp_func_t cmp)
 {
     if (actual >= cant)
     {
@@ -98,7 +99,7 @@ void downheap(void **datos, size_t cant, size_t actual, cmp_func_t cmp)
     }
 }
 
-bool redimensionar(heap_t *heap, size_t nuevo_tam)
+static bool redimensionar(heap_t *heap, size_t nuevo_tam)
 {
     void **nuevos_datos = realloc(heap->datos, sizeof(void *) * nuevo_tam);
 
@@ -113,7 +114,7 @@ bool redimensionar(heap_t *heap, size_t nuevo_tam)
     return true;
 }
 
-void heapify(void *elementos[], size_t n, cmp_func_t cmp)
+static void heapify(void *elementos[], size_t n, cmp_func_t cmp)
 {
     size_t i = n / 2;
     while (i--)
@@ -139,7 +140,7 @@ void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp)
     }
 }
 
-heap_t *_heap_crear(size_t tam, size_t cant, cmp_func_t cmp)
+static heap_t *_heap_crear(size_t tam, size_t cant, cmp_func_t cmp)
 {
     heap_t *heap;
 
