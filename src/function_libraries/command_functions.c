@@ -5,11 +5,11 @@
 #include "error_messages.h"
 #include "success_messages.h"
 /* Inclución de estructuras */
-#include "doctor.h"
-#include "report.h"
-#include "bst_doctors.h"
-#include "hash_patients.h"
-#include "hash_turns.h"
+#include "../our_tda/doctor/doctor.h"
+#include "../our_tda/command/report.h"
+#include "../our_tda/doctor/bst_doctors.h"
+#include "../our_tda/patient/hash_patients.h"
+#include "../our_tda/turns/hash_turns.h"
 
 /* Firma de funciones auxiliares */
 

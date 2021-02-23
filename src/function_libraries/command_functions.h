@@ -1,9 +1,9 @@
 #ifndef COMMAND_FUNCTIONS
 #define COMMAND_FUNCTIONS
 
-#include "hash_turns.h"
-#include "hash_patients.h"
-#include "bst_doctors.h"
+#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/patient/hash_patients.h"
+#include "../our_tda/doctor/bst_doctors.h"
 
 /*
 *   Se recibe un nombre de paciente y el nombre de una especialidad, y el 
