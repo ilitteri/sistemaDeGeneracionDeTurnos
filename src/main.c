@@ -31,14 +31,15 @@ static int handle_command_error(int argc);
 static int handle_file_error(int argc, char *path);
 static bool handle_format_error(char **values, char *line);
 /* Funciones relacionadas con la generación de estrucutras */
-static void process_patients_data(FILE *patients_file, lista_t *patients_data, lista_t *doctors_data);
-static void process_doctors_data(FILE *doctors_dile, lista_t *doctors_data);
-static void register_doctors(BSTDoctors *doctors_register, lista_t *doctors_data, lista_t *patients_data);
-static void register_patients(BSTDoctors *doctors_register, HashPatients *patients_register, lista_t *patients_data);
-static void load_structures(FILE *doctors_dile, FILE *patients_file,
-							BSTDoctors *doctors_register, HashPatients *patients_register,
-							lista_t *doctors_data, lista_t *patients_data,
-							HashTurns *turns);
+static lista_t *process_doctors_data(FILE *doctors_dile);
+static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data);
+static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_data);
+static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *patients_data);
+static HashTurns *init_hash_turns(lista_t *doctors_data, lista_t *patients_data);
+// static void load_structures(FILE *doctors_dile, FILE *patients_file,
+// 							BSTDoctors *doctors_register, HashPatients *patients_register,
+// 							lista_t *doctors_data, lista_t *patients_data,
+// 							HashTurns *turns);
 /* Funciones relacionadas con archivos */
 static void close_files(FILE *doctors, FILE *patients);
 /* Funciones relacionadas con la fase de comandos */
@@ -62,14 +63,18 @@ int main(int argc, char **argv)
 	patients_file = fopen(doctors_path, "r");
 	handle_file_error(errno, patients_path);
 
-	lista_t *doctors_data;
-	lista_t *patients_data;
-	BSTDoctors *doctors_register;
-	HashPatients *patients_register;
-	HashTurns *turns;
-
-	load_structures(doctors_file, patients_file, doctors_register, patients_register, doctors_data, patients_data, turns);
+	lista_t *doctors_data = process_doctors_data(doctors_file);
+	lista_t *patients_data = process_patients_data(patients_file, doctors_data);
 	close_files(doctors_file, patients_file);
+	BSTDoctors *doctors_register = register_doctors(doctors_data, patients_data);
+	destroy_structure(doctors_data);
+	HashPatients *patients_register = register_patients(doctors_register, patients_data);
+	destroy_structure(patients_data);
+	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
+
+	// load_structures(doctors_file, patients_file, doctors_register, patients_register, doctors_data, patients_data, turns);
+
+	
 
 	process_stdin(turns, patients_register, doctors_register);
 
@@ -169,28 +174,32 @@ static int handle_file_error(int errnum, char *path)
 	return 0;
 }
 
-static void process_patients_data(FILE *patients_file, lista_t *patients_data, lista_t *doctors_data)
+static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data)
 {
+	lista_t *patients_data;
 	if ((patients_data = csv_create_structure(patients_file)) == NULL)
 	{
 		destroy_structure(doctors_data);
 		printf(ERROR_MEM, "patients_data");
 		exit(EXIT_FAILURE);
 	}
+	return patients_data;
 }
 
-static void process_doctors_data(FILE *doctors_file, lista_t *doctors_data)
+static lista_t *process_doctors_data(FILE *doctors_file)
 {
+	lista_t *doctors_data;
 	if ((doctors_data = csv_create_structure(doctors_file)) == NULL)
 	{
 		printf(ERROR_MEM, "doctors_data");
 		exit(EXIT_FAILURE);
 	}
+	return doctors_data;
 }
 
-static void init_hash_turns(lista_t *doctors_data, lista_t *patients_data,
-							HashTurns *turns)
+static HashTurns * init_hash_turns(lista_t *doctors_data, lista_t *patients_data)
 {
+	HashTurns *turns;
 	if ((turns = load_hash_turns(doctors_data)) == NULL)
 	{
 		destroy_structure(patients_data);
@@ -198,10 +207,12 @@ static void init_hash_turns(lista_t *doctors_data, lista_t *patients_data,
 		printf(ERROR_MEM, "turns");
 		exit(EXIT_FAILURE);
 	}
+	return turns;
 }
 
-static void register_doctors(BSTDoctors *doctors_register, lista_t *doctors_data, lista_t *patients_data)
+static BSTDoctors * register_doctors(lista_t *doctors_data, lista_t *patients_data)
 {
+	BSTDoctors *doctors_register;
 	if ((doctors_register = load_doctors(doctors_data)) == NULL)
 	{
 		destroy_structure(doctors_data);
@@ -209,10 +220,12 @@ static void register_doctors(BSTDoctors *doctors_register, lista_t *doctors_data
 		printf(ERROR_MEM, "doctors_register");
 		exit(EXIT_FAILURE);
 	}
+	return doctors_register;
 }
 
-static void register_patients(BSTDoctors *doctors_register, HashPatients *patients_register, lista_t *patients_data)
+static HashPatients * register_patients(BSTDoctors *doctors_register, lista_t *patients_data)
 {
+	HashPatients *patients_register;
 	if ((patients_register = load_patients(patients_data)) == NULL)
 	{
 		bst_doctors_destroy(doctors_register);
@@ -220,17 +233,18 @@ static void register_patients(BSTDoctors *doctors_register, HashPatients *patien
 		printf(ERROR_MEM, "patients_register");
 		exit(EXIT_FAILURE);
 	}
+	return patients_register;
 }
 
-static void load_structures(FILE *doctors_file, FILE *patients_file,
-							BSTDoctors *doctors_register, HashPatients *patients_register,
-							lista_t *doctors_data, lista_t *patients_data,
-							HashTurns *turns)
-{
-	process_doctors_data(doctors_file, doctors_data);
-	process_patients_data(patients_file, patients_data, doctors_data);
-	init_hash_turns(doctors_data, patients_data, turns);
-	register_doctors(doctors_register, doctors_data, patients_data);
-	destroy_structure(doctors_data);
-	register_patients(doctors_register, patients_register, patients_data);
-}
+// static void load_structures(FILE *doctors_file, FILE *patients_file,
+// 							BSTDoctors *doctors_register, HashPatients *patients_register,
+// 							lista_t *doctors_data, lista_t *patients_data,
+// 							HashTurns *turns)
+// {
+// 	process_doctors_data(doctors_file, doctors_data);
+// 	process_patients_data(patients_file, patients_data, doctors_data);
+// 	init_hash_turns(doctors_data, patients_data, turns);
+// 	register_doctors(doctors_register, doctors_data, patients_data);
+// 	destroy_structure(doctors_data);
+// 	register_patients(doctors_register, patients_register, patients_data);
+// }

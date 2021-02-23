@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 /* Inclución de librerías de mensajes */
-#include "error_messages.h"
-#include "success_messages.h"
+#include "../message_libraries/error_messages.h"
+#include "../message_libraries/success_messages.h"
 /* Inclución de estructuras */
 #include "../our_tda/doctor/doctor.h"
 #include "../our_tda/command/report.h"
