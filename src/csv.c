@@ -1,8 +1,11 @@
 #define _POSIX_C_SOURCE 200809L //getline
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "csv.h"
+
 #define SEPARATION ','
 
 static void remove_new_line(char* line) {
@@ -12,12 +15,11 @@ static void remove_new_line(char* line) {
 	}
 }
 
-lista_t* csv_create_strucure(const char* csv_path, void* (*creador) (char**, void*), void* extra) {
-	FILE* file = fopen(csv_path, "r");
-	if (!file) {
-		return NULL;
-	}
-	
+void _free_strv(void* strv) {
+    free_strv((char**) strv);
+}
+
+lista_t* csv_create_structure(FILE* file) {
 	lista_t* list = lista_crear();
 	if (!list) {
 		fclose(file);
@@ -29,11 +31,13 @@ lista_t* csv_create_strucure(const char* csv_path, void* (*creador) (char**, voi
 	while (getline(&line, &c, file) > 0) {
 		remove_new_line(line);
 		char** values = split(line, SEPARATION);
-		lista_insertar_ultimo(list, creador(values, extra));
-		free_strv(values);
+		lista_insertar_ultimo(list, values);
 	}
 	free(line);
 	fclose(file);
 	return list;
 }
 
+void destroy_structure(lista_t* list) {
+	lista_destruir(list, _free_strv);
+}
