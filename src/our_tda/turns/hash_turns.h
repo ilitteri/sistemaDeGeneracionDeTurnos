@@ -46,7 +46,7 @@ bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
 /*  Informa la cantidad de pacientes en espera de una especialidad.
 *   Pre: la estructura HashTurns fué creada.
 */
-size_t hash_turns_specialty_count(HashTurns *turns, char *urgency, char *specialty);
+size_t hash_turns_specialty_count(HashTurns *turns, char *specialty);
 
 /*  Destruye la estructura */
 void hash_turns_destroy(HashTurns *turns);

@@ -178,10 +178,9 @@ bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
     return hash_turns_specialty_exists(turns, specialty);
 }
 
-size_t hash_turns_specialty_count(HashTurns *turns, char *urgency, char *specialty)
+size_t hash_turns_specialty_count(HashTurns *turns, char *specialty)
 {
-    return strcmp(urgency, URGENT) == 0 ?
-            queue_patients_count(hash_obtener(turns->urgent, specialty)) :
+    return queue_patients_count(hash_obtener(turns->urgent, specialty)) +
             heap_patients_count(hash_obtener(turns->regular, specialty));
 }
 
