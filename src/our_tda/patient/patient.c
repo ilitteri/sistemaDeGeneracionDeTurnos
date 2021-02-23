@@ -1,8 +1,9 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "patient.h"
 
-typedef struct
+typedef struct Patient
 {
     char *name;
     size_t entry_year;
