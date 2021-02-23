@@ -36,10 +36,6 @@ static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data
 static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_data);
 static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *patients_data);
 static HashTurns *init_hash_turns(lista_t *doctors_data, lista_t *patients_data);
-// static void load_structures(FILE *doctors_dile, FILE *patients_file,
-// 							BSTDoctors *doctors_register, HashPatients *patients_register,
-// 							lista_t *doctors_data, lista_t *patients_data,
-// 							HashTurns *turns);
 /* Funciones relacionadas con archivos */
 static void close_files(FILE *doctors, FILE *patients);
 /* Funciones relacionadas con la fase de comandos */
@@ -71,10 +67,6 @@ int main(int argc, char **argv)
 	HashPatients *patients_register = register_patients(doctors_register, patients_data);
 	destroy_structure(patients_data);
 	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
-
-	// load_structures(doctors_file, patients_file, doctors_register, patients_register, doctors_data, patients_data, turns);
-
-	
 
 	process_stdin(turns, patients_register, doctors_register);
 
@@ -235,16 +227,3 @@ static HashPatients * register_patients(BSTDoctors *doctors_register, lista_t *p
 	}
 	return patients_register;
 }
-
-// static void load_structures(FILE *doctors_file, FILE *patients_file,
-// 							BSTDoctors *doctors_register, HashPatients *patients_register,
-// 							lista_t *doctors_data, lista_t *patients_data,
-// 							HashTurns *turns)
-// {
-// 	process_doctors_data(doctors_file, doctors_data);
-// 	process_patients_data(patients_file, patients_data, doctors_data);
-// 	init_hash_turns(doctors_data, patients_data, turns);
-// 	register_doctors(doctors_register, doctors_data, patients_data);
-// 	destroy_structure(doctors_data);
-// 	register_patients(doctors_register, patients_register, patients_data);
-// }
