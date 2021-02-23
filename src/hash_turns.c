@@ -141,10 +141,19 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
     return true;
 }
 
-bool hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty)
+Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty)
 {
-    char *specialty = doctor_specialty(doctor);
-    // Terminar xD
+    if (queue_patients_count(hash_obtener(turns->urgent, specialty))))
+    {
+        return queue_patients_dequeue(hash_obtener(turns->urgent, specialty)));
+    }
+
+    else if (heap_patients_count(hash_obtener(turns->regular, specialty)))
+    {
+        return heap_patients_dequeue(hash_obtener(turns->regular, specialty));
+    }
+
+    return NULL;
 }
 
 bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)

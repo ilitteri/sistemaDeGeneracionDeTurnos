@@ -26,15 +26,15 @@ bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Pa
 bool hash_turns_add_specialty(HashTurns *turns, char *specialty);
 
 /*  Atiende al siguiente paciente en espera.
-*   Pre: la estructura HashTurns fué creada.
-*   Pos: si el doctor está registrado, y la especialidad existe, y hay un
-*       paciente en espera, éste es atendido (devuelve true), sino devuelve
-*       false.
+*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el
+*       doctor está especializado en ella.
+*   Pos: datos del paciente desencolado.
 */
-bool hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
+Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
 
 /*  Informa si existe una determinada especialidad.
-*   Pre: la estructura HashTurns fué creada.
+*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el doctor
+*       está especializado en ella.
 *   Pos: true si existe, false si no.
 */
 bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
