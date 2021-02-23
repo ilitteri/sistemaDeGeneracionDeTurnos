@@ -19,7 +19,7 @@ Doctor *doctor_check_in(char *name, char *specialty)
         return NULL;
     }
 
-    char *name_copy, specialty_copy;
+    char *name_copy, *specialty_copy;
     if ((name_copy = malloc(strlen(name) + 1)) == NULL)
     {
         free(doctor);

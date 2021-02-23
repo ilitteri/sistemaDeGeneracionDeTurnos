@@ -160,11 +160,13 @@ Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *speci
 {
     if (queue_patients_count(hash_obtener(turns->urgent, specialty)))
     {
+        doctor_attend_patient(doctor);
         return queue_patients_dequeue(hash_obtener(turns->urgent, specialty));
     }
 
     else if (heap_patients_count(hash_obtener(turns->regular, specialty)))
     {
+        doctor_attend_patient(doctor);
         return heap_patients_dequeue(hash_obtener(turns->regular, specialty));
     }
 
