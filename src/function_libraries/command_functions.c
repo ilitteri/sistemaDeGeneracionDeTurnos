@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 /* Inclución de librerías de mensajes */
 #include "../message_libraries/error_messages.h"
 #include "../message_libraries/success_messages.h"
@@ -14,10 +15,10 @@
 /* Firma de funciones auxiliares */
 
 /* Funciones auxiliares para el comando 3 */
-static bool handle_cmd3_params_error(char **parameters);
+static bool handle_cmd_3_params_error(char **parameters);
 static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters);
-static bool visit_doctors_in_range(const char *clave, void *dato, Report *extra);
-static void execute_cmd_3(const BSTDoctors *doctors, const char *min, const char *max);
+static bool visit_doctors_in_range(const char *clave, void *dato, void *extra);
+static void execute_cmd_3(BSTDoctors *doctors, const char *min, const char *max);
 
 void generate_report(BSTDoctors *doctors, char **parameters)
 {
@@ -29,7 +30,7 @@ void generate_report(BSTDoctors *doctors, char **parameters)
     execute_cmd_3(doctors, parameters[0], parameters[1]);
 }
 
-static bool handle_cmd3_params_error(char **parameters)
+static bool handle_cmd_3_params_error(char **parameters)
 {
     size_t param_count;
     for (param_count = 1; parameters[param_count-1] != NULL; param_count++);
@@ -50,26 +51,27 @@ static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters)
 
     if (min == NULL || max == NULL)
     {
-        printf(ERROR_DOCTOR, min == NULL ? min : max);
+        printf(ERROR_DOCTOR, min == NULL ? parameters[0] : parameters[1]);
         return false;
     }
 
     return true;
 }
 
-static bool visit_doctors_in_range(const char *clave, void *dato, Report *extra)
+static bool visit_doctors_in_range(const char *clave, void *dato, void *extra)
 {
-    if (strcmp(clave, report_min(extra)) < 0 || strcmp(clave, report_max(extra)) > 0)
+    Report *report = extra;
+    if (strcmp(clave, report_min(report)) < 0 || strcmp(clave, report_max(report)) > 0)
     {
         return false;
     }
     Doctor *doctor = dato;
-    printf(DOCTOR_REPORT, report_get_count(extra), doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
-    report_count_increment(extra);
+    printf(DOCTOR_REPORT, report_get_count(report), doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
+    report_count_increment(report);
     return true;
 }
 
-static void execute_cmd_3(const BSTDoctors *doctors, const char *min, const char *max)
+static void execute_cmd_3(BSTDoctors *doctors, const char *min, const char *max)
 {
     Report *doctors_report;
 
