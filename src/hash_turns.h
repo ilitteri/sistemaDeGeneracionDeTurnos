@@ -5,21 +5,44 @@
 #include "queue_patients.h"
 #include "heap_patients.h"
 
+/* Struct */
+
 typedef struct Hash HashTurns;
 
-// typedef queue_patients_destroy hash_urgent_destroy;
-// typedef heap_patients_destroy hash_regulars_destroy;
+/* Primitivas de la estructura */
 
+/* Crea la estructura */
 HashTurns *hash_turns_create();
 
+/*  Agrega un paciente a la cola de espera (dependiendo de la urgencia, va a
+*   una u otra).
+*   Pre: la estructura HashTurns fué creada.
+*/
 bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient);
 
+/*  Agrega una especialidad a el diccionario de turnos urgentes y regulares.
+*   Pre: la estructura HashTurns fué creada.
+*/
 bool hash_turns_add_specialty(HashTurns *turns, char *specialty);
 
+/*  Atiende al siguiente paciente en espera.
+*   Pre: la estructura HashTurns fué creada.
+*   Pos: si el doctor está registrado, y la especialidad existe, y hay un
+*       paciente en espera, éste es atendido (devuelve true), sino devuelve
+*       false.
+*/
 bool hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
 
+/*  Informa si existe una determinada especialidad.
+*   Pre: la estructura HashTurns fué creada.
+*   Pos: true si existe, false si no.
+*/
 bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
 
+/*  Informa la cantidad de pacientes en espera de una especialidad.
+*   Pre: la estructura HashTurns fué creada.
+*/
 size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty);
 
+/*  Destruye la estructura */
 void hash_turns_destroy(HashTurns *turns);
