@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>m
+#include <string.h>
 
 #include "../../basic_tda/hash.h"
 #include "hash_turns.h"
@@ -23,22 +23,37 @@ static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
 static bool add_urgent_specialty(hash_t *urgent, char* specialty);
 static bool add_regular_specialty(hash_t *regular, char* specialty);
 
-HashTurns *hash_turns_create()
+void _destroy_patient(void *patient)
+{
+    destroy_patient((Patient *)patient);
+}
+
+void _queue_patients_destroy(void *queue)
+{
+    queue_patients_destroy((QueuePatients *)queue, _destroy_patient);
+}
+
+void _heap_patients_destroy(void *heap)
+{
+    heap_patients_destroy((HeapPatients *)heap, _destroy_patient);
+}
+
+HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
 {
     HashTurns *turns;
 
-    if ((turns = hash_crear(hash_destruir)) == NULL)
+    if ((turns = malloc(sizeof(HashTurns))) == NULL)
     {
         return NULL;
     }
 
-    if ((turns->urgent = hash_crear(queue_patients_destroy)) == NULL)
+    if ((turns->urgent = hash_crear(_queue_patients_destroy)) == NULL)
     {
         free(turns);
         return NULL;
     }
 
-    if ((turns->regular = hash_crear(heap_patients_destroy)) == NULL)
+    if ((turns->regular = hash_crear(_heap_patients_destroy)) == NULL)
     {
         free(turns->urgent);
         free(turns);
@@ -133,8 +148,8 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
 
     if (!ok)
     {
-        queue_patients_destroy(hash_borrar(turns->urgent, specialty), destroy_patient);
-        heap_patients_destroy(hash_borrar(turns->regular, specialty), destroy_patient);
+        queue_patients_destroy(hash_borrar(turns->urgent, specialty), _destroy_patient);
+        heap_patients_destroy(hash_borrar(turns->regular, specialty), _destroy_patient);
         return false;
     }
 
@@ -158,20 +173,14 @@ Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *speci
 
 bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
 {
-    return hash_pertenece(turns, specialty);
+    return hash_turns_specialty_exists(turns, specialty);
 }
 
 size_t hash_turns_specialty_count(HashTurns *turns, char *urgency, char *specialty)
 {
-    if (strcmp(urgency, URGENT) == 0)
-    {
-        return queue_patients_count(hash_obtener(turns->urgent, specialty));
-    }
-
-    else if (strcmp(urgency, REGULAR) == 0)
-    {
-        return heap_patients_count(hash_obtener(turns->regular, specialty));
-    }
+    return strcmp(urgency, URGENT) == 0 ?
+            queue_patients_count(hash_obtener(turns->urgent, specialty)) :
+            heap_patients_count(hash_obtener(turns->regular, specialty));
 }
 
 void hash_turns_destroy(HashTurns *turns)

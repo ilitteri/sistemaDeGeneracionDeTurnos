@@ -5,10 +5,13 @@
 #include "../../basic_tda/cola.h"
 #include "queue_patients.h"
 #include "heap_patients.h"
+#include "../doctor/doctor.h"
 
 /* Struct */
 
 typedef struct Hash HashTurns;
+
+typedef hash_destruir_dato_t hash_turns_destroy_data;
 
 /* Primitivas de la estructura */
 
