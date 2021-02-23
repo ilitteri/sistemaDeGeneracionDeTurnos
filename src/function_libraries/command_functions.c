@@ -67,6 +67,7 @@ void generate_report(BSTDoctors *doctors, char **parameters)
     {
         return;
     }
+    printf(DOCTOR_COUNT, bst_doctors_count(doctors));
     execute_cmd3(doctors, parameters[0], parameters[1]);
 }
 
