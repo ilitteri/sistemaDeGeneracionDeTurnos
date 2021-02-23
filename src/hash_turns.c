@@ -1,10 +1,12 @@
 #include <stdlib.h>
-#incldue <stdbool.h>
+#include <stdbool.h>
 
 #include "hash.h"
 #include "hash_turns.h"
 #include "queue_patients.h"
 #include "heap_patients.h"
+#include "doctor.h"
+#include "patient.h"
 
 typedef enum Priority
 {
@@ -18,8 +20,8 @@ typedef struct Hash
     hash_t *regular;
 } HashTurns;
 
-static bool add_urgent_turn(hash_t *urgent, char *specialty, char *patient_name);
-static bool add_regular_turn(hash_t *regular, char *specialty, char *patient_name);
+static bool add_urgent_turn(hash_t *urgent, char *specialty, Patient *patient);
+static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient);
 static bool add_urgent_specialty(hash_t *urgent, char* specialty);
 static bool add_regular_specialty(hash_t *regular, char* specialty);
 
@@ -133,8 +135,8 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
 
     if (!ok)
     {
-        queue_patients_destroy(hash_borrar(turns->urgent, specialty));
-        heap_patients_destroy(hash_borrar(turns->regular, specialty));
+        queue_patients_destroy(hash_borrar(turns->urgent, specialty), destroy_patient);
+        heap_patients_destroy(hash_borrar(turns->regular, specialty), destroy_patient);
         return false;
     }
 
@@ -143,9 +145,9 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
 
 Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty)
 {
-    if (queue_patients_count(hash_obtener(turns->urgent, specialty))))
+    if (queue_patients_count(hash_obtener(turns->urgent, specialty)))
     {
-        return queue_patients_dequeue(hash_obtener(turns->urgent, specialty)));
+        return queue_patients_dequeue(hash_obtener(turns->urgent, specialty));
     }
 
     else if (heap_patients_count(hash_obtener(turns->regular, specialty)))
