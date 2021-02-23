@@ -1,7 +1,9 @@
 #include <stdlib.h>
 
 #include "bst_doctors.h"
+#include "../basic_tda/abb.h"
 #include "doctor.h"
+#include "../command/report.h"
 
 BSTDoctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data)
 {

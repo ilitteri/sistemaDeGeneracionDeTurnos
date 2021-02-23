@@ -5,15 +5,15 @@
 
 /* Inclución de estructuras */
 #include "basic_tda/lista.h"
-#include "src/bst_doctors.h"
-#include "src/hash_patients.h"
-#include "src/hash_turns.h"
+#include "our_tda/doctor/bst_doctors.h"
+#include "our_tda/patient/hash_patients.h"
+#include "our_tda/turns/hash_turns.h"
 /* Inclución de librerías de funciones propias */
-#include "src/strutil.h"
-#include "src/load_structure_functions.h"
-#include "src/command_functions.h"
+#include "function_libraries/strutil.h"
+#include "function_libraries/load_structure_functions.h"
+#include "function_libraries/command_functions.h"
 /* Inclución de librerías de mensajes */
-#include "error_messages.h"
+#include "message_libraries/error_messages.h"
 
 #define CMD_SIZE 128
 
