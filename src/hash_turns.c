@@ -50,12 +50,12 @@ HashTurns *hash_turns_create()
 
 static bool add_urgent_turn(hash_t *urgent, char *specialty, Patient *patient)
 {
-    
+    return queue_patients_enqueue((QueuePatients *)hash_obtener(urgent, specialty), patient);
 }
 
 static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
 {
-
+    return heap_patients_enqueue((HeapPatients *)hash_obtener(regular, specialty), patient);
 }
 
 bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient)
