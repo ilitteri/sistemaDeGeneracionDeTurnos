@@ -22,7 +22,7 @@ HeapPatients *heap_patients_create(HeapPatients_cmp cmp);
 *   Pre: la estructura fué creada.
 *   Pos: se libera la memoria pedida para la estructura.
 */
-void heap_patients_destroy(HeapPatients *turns, void (*patient_destroy) (Patient *p));
+void heap_patients_destroy(HeapPatients *turns, void (*patient_destroy) (void *));
 
 /*  Informa la cantidad de pacientes en espera (no modifica la estructura).
 *   Pre: la estructura fue creada.

@@ -16,7 +16,7 @@ HeapPatients *heap_patients_create(HeapPatients_cmp cmp)
     return regular;
 }
 
-void heap_patients_destroy(HeapPatients *turns, void (*patients_destroy) (Patient *p))
+void heap_patients_destroy(HeapPatients *turns, void (*patients_destroy) (void *))
 {
     heap_destruir(turns, patients_destroy);
 }
