@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "bst_doctors.h"
-#include "../basic_tda/abb.h"
+#include "../../basic_tda/abb.h"
 #include "doctor.h"
 #include "../command/report.h"
 
