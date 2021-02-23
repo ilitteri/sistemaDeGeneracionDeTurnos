@@ -1,8 +1,8 @@
 #include <stdlib.h>
 
-#include "abb.h"
+#include "../../basic_tda/abb.h"
 #include "doctor.h"
-#include "report.h"
+#include "../command/report.h"
 
 /* Tipos de función para comparar claves y destruir datos. */
 typedef abb_comparar_clave_t bst_key_cmp;

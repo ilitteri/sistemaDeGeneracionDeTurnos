@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "cola.h"
-#include "patient.h"
+#include "../../basic_tda/cola.h"
+#include "../patient/patient.h"
 #include "queue_patients.h"
 
 typedef struct Queue

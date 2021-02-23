@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "patient.h"
+#include "../patient/patient.h"
 
 /* Struct */
 

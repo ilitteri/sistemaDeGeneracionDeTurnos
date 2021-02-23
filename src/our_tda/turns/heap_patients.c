@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "heap_patients.h"
-#include "patient.h"
+#include "../patient/patient.h"
 
 
 HeapPatients *heap_patients_create(HeapPatients_cmp cmp)

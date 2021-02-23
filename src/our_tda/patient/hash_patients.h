@@ -1,6 +1,7 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "hash.h"
+#include "../../basic_tda/hash.h"
 #include "patient.h"
 
 typedef hash_t HashPatients;

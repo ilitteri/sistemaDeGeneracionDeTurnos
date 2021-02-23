@@ -1,19 +1,19 @@
 #include <stdlib.h>
 
-#include "hash.h"
-#include "abb.h"
-#include "heap.h"
-#include "cola.h"
-#include "lista.h"
-#include "pila.h"
+#include "../basic_tda/hash.h"
+#include "../basic_tda/abb.h"
+#include "../basic_tda/heap.h"
+#include "../basic_tda/cola.h"
+#include "../basic_tda/lista.h"
+#include "../basic_tda/pila.h"
 
-#include "patient.h"
-#include "doctor.h"
-#include "hash_patients.h"
-#include "heap_patients.h"
-#include "queue_patients.h"
-#include "hash_turns.h"
-#include "bst_doctors.h"
+#include "../our_tda/patient/patient.h"
+#include "../our_tda/doctor/doctor.h"
+#include "../our_tda/patient/hash_patient.h"
+#include "../our_tda/turns/heap_patients.h"
+#include "../our_tda/turns/queue_patients.h"
+#include "../our_tda/turns/hash_turns"
+#include "../our_tda/doctor/bst_doctor.h"
 
 HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
 {

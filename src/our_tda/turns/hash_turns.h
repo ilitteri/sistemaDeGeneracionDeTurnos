@@ -1,7 +1,8 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "hash.h"
-#include "cola.h"
+#include "../../basic_tda/hash.h"
+#include "../../basic_tda/cola.h"
 #include "queue_patients.h"
 #include "heap_patients.h"
 

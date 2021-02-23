@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "hash.h"
+#include "../../basic_tda/hash.h"
 #include "hash_turns.h"
 #include "queue_patients.h"
 #include "heap_patients.h"
-#include "doctor.h"
-#include "patient.h"
+#include "../doctor/doctor.h"
+#include "../patient/patient.h"
 
 typedef enum Priority
 {

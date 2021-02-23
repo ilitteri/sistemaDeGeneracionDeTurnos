@@ -1,7 +1,8 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "heap.h"
-#include "patient.h"
+#include "../../basic_tda/heap.h"
+#include "../patient/patient.h"
 
 /* Struct */
 

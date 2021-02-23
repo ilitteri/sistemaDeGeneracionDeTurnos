@@ -4,14 +4,14 @@
 #include <stdbool.h>
 
 /* Inclución de estructuras */
-#include "lista.h"
-#include "bst_doctors.h"
-#include "hash_patients.h"
-#include "hash_turns.h"
+#include "basic_tda/lista.h"
+#include "src/bst_doctors.h"
+#include "src/hash_patients.h"
+#include "src/hash_turns.h"
 /* Inclución de librerías de funciones propias */
-#include "strutil.h"
-#include "load_structure_functions.h"
-#include "command_functions.h"
+#include "src/strutil.h"
+#include "src/load_structure_functions.h"
+#include "src/command_functions.h"
 /* Inclución de librerías de mensajes */
 #include "error_messages.h"
 
