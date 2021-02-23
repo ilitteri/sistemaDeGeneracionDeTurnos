@@ -163,7 +163,7 @@ bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
 
 size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty)
 {
-        if (urgency == URGENT)
+    if (urgency == URGENT)
     {
         return queue_patients_count(hash_obtener(turns->urgent, specialty));
     }
