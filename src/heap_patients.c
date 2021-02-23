@@ -6,7 +6,13 @@
 
 HeapPatients *heap_patients_create(HeapPatients_cmp cmp)
 {
-    HeapPatients *regular = heap_crear(cmp);
+    HeapPatients *regular;
+
+    if ((regular = heap_crear(cmp)) == NULL)
+    {
+        return NULL;
+    }
+
     return regular;
 }
 
@@ -20,7 +26,7 @@ size_t heap_patients_count(const HeapPatients *turns)
     return heap_cantidad(turns);
 }
 
-bool heap_patients_enqueue(const HeapPatients *turns, Patient *patient)
+bool heap_patients_enqueue(HeapPatients *turns, Patient *patient)
 {
     return heap_encolar(turns, (void *)patient);
 }
