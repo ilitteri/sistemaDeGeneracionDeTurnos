@@ -19,7 +19,7 @@ HashTurns *hash_turns_create();
 *   una u otra).
 *   Pre: la estructura HashTurns fué creada.
 */
-bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient);
+bool hash_turns_add_turn(HashTurns *turns, char* urgency, char *specialty, Patient *patient);
 
 /*  Agrega una especialidad a el diccionario de turnos urgentes y regulares.
 *   Pre: la estructura HashTurns fué creada.
@@ -43,7 +43,7 @@ bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
 /*  Informa la cantidad de pacientes en espera de una especialidad.
 *   Pre: la estructura HashTurns fué creada.
 */
-size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty);
+size_t hash_turns_specialty_count(HashTurns *turns, char *urgency, char *specialty);
 
 /*  Destruye la estructura */
 void hash_turns_destroy(HashTurns *turns);
