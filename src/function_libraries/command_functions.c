@@ -163,8 +163,7 @@ static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctor,
 static bool cm3_error_handler(char **parameters)
 {
     size_t param_count;
-    for (param_count = 1; parameters[param_count-1] != NULL; param_count++);
-
+    for (param_count = 0; parameters[param_count] != NULL; param_count++);
     if (param_count != 2)
     {
         printf(ERROR_CMD_PARAMS_COUNT, "INFORME");

@@ -36,8 +36,6 @@ static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data
 static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_data);
 static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *patients_data);
 static HashTurns *init_hash_turns(lista_t *doctors_data, lista_t *patients_data);
-/* Funciones relacionadas con archivos */
-static void close_files(FILE *doctors, FILE *patients);
 /* Funciones relacionadas con la fase de comandos */
 static bool process_command(char *cmd, char **parameters,
 							HashTurns *turns, HashPatients *patients, BSTDoctors *doctors);
@@ -61,14 +59,19 @@ int main(int argc, char **argv)
 
 	lista_t *doctors_data = process_doctors_data(doctors_file);
 	lista_t *patients_data = process_patients_data(patients_file, doctors_data);
-	close_files(doctors_file, patients_file);
+	fclose(doctors_file);
+	fclose(patients_file);
 	BSTDoctors *doctors_register = register_doctors(doctors_data, patients_data);
+	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
 	destroy_structure(doctors_data);
 	HashPatients *patients_register = register_patients(doctors_register, patients_data);
 	destroy_structure(patients_data);
-	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
 
 	process_stdin(turns, patients_register, doctors_register);
+
+	hash_turns_destroy(turns);
+	bst_doctors_destroy(doctors_register);
+	hash_patients_destroy(patients_register);
 
 	return 0;
 }
@@ -79,13 +82,13 @@ static bool process_command(char *cmd, char **parameters,
 
 	if (strcmp(cmd, CMD_PEDIR_TURNO) == 0)
 	{
-		// pedir_turno(turns, patients, parameters);
+		make_appointment(turns, patients, parameters);
 		return false;
 	}
 
 	else if (strcmp(cmd, CMD_ATENDER) == 0)
 	{
-		// atender_paciente(turns, doctors, parameters);
+		attend_patient(turns, doctors, parameters);
 		return false;
 	}
 
@@ -96,6 +99,7 @@ static bool process_command(char *cmd, char **parameters,
 
 	else
 	{
+		printf(ERROR_CMD, cmd);
 		return false;
 	}
 
@@ -111,9 +115,20 @@ void remove_new_line(char *line)
 	}
 }
 
+static bool _handle_format_error(char **values)
+{
+	size_t values_count;
+	for (values_count = 1; values[values_count-1] != NULL; values_count++);
+	if (values_count < 3)
+	{
+		return false;
+	}
+	return true;
+}
+
 static bool handle_format_error(char **values, char *line)
 {
-	if (values == NULL)
+	if (values == NULL || !_handle_format_error(values))
 	{
 		printf(ERROR_FORMAT, line);
 		free_strv(values);
@@ -138,12 +153,6 @@ void process_stdin(HashTurns *turns, HashPatients *patients, BSTDoctors *doctors
 		free_strv(values);
 	}
 	free(line);
-}
-
-static void close_files(FILE *doctors_file, FILE *patients_file)
-{
-	fclose(doctors_file);
-	fclose(patients_file);
 }
 
 static int handle_command_error(int argc)

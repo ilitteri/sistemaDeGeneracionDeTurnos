@@ -34,7 +34,6 @@ lista_t* csv_create_structure(FILE* file) {
 		lista_insertar_ultimo(list, values);
 	}
 	free(line);
-	fclose(file);
 	return list;
 }
 
