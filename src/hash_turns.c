@@ -48,26 +48,26 @@ HashTurns *hash_turns_create()
     return turns;
 }
 
-static bool add_urgent_turn(hash_t *urgent, char *specialty, char *patient_name)
+static bool add_urgent_turn(hash_t *urgent, char *specialty, Patient *patient)
 {
     
 }
 
-static bool add_regular_turn(hash_t *regular, char *specialty, char *patient_name)
+static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
 {
 
 }
 
-bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, char *patient_name)
+bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient)
 {
     if (urgency == URGENT)
     {
-        return add_urgent_turn(turns->urgent, specialty, patient_name);
+        return add_urgent_turn(turns->urgent, specialty, patient);
     }
 
     else if (urgency == REGULAR)
     {
-        return add_regular_turn(turns->regular, specialty, patient_name);
+        return add_regular_turn(turns->regular, specialty, patient);
     }
 
     return false;
@@ -139,6 +139,30 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
     }
 
     return true;
+}
+
+bool hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty)
+{
+    char *specialty = doctor_specialty(doctor);
+    // Terminar xD
+}
+
+bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
+{
+    return hash_pertenece(turns, specialty);
+}
+
+size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty)
+{
+        if (urgency == URGENT)
+    {
+        return queue_patients_count(hash_obtener(turns->urgent, specialty));
+    }
+
+    else if (urgency == REGULAR)
+    {
+        return heap_patients_count(hash_obtener(turns->regular, specialty));
+    }
 }
 
 void hash_turns_destroy(HashTurns *turns)

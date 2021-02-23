@@ -12,10 +12,14 @@ typedef struct Hash HashTurns;
 
 HashTurns *hash_turns_create();
 
-bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, char *patient_name);
+bool hash_turns_add_turn(HashTurns *turns, Priority urgency, char *specialty, Patient *patient);
 
 bool hash_turns_add_specialty(HashTurns *turns, char *specialty);
 
-bool hash_turns_attend_patient(HashTurns *turns, char *specialty);
+bool hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
+
+bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
+
+size_t hash_turns_specialty_count(HashTurns *turns, Priority urgency, char *specialty);
 
 void hash_turns_destroy(HashTurns *turns);
