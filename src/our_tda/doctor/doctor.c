@@ -7,7 +7,7 @@ typedef struct Doctor
 {
     char *name;
     char *specialty;
-    int attended_patiens;
+    size_t attended_patiens;
 } Doctor;
 
 Doctor *doctor_check_in(char *name, char *specialty)
@@ -53,7 +53,7 @@ char *doctor_specialty(const Doctor *doctor)
     return doctor->specialty;
 }
 
-int doctor_attended_patients(const Doctor *doctor)
+size_t doctor_attended_patients(const Doctor *doctor)
 {
     return doctor->attended_patiens;
 }

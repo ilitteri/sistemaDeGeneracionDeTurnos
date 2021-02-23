@@ -27,7 +27,7 @@ char *doctor_specialty(const Doctor *doctor);
 *  Pre: el doctor fue registrado
 *  Post: devuelve la cantidad de pacientes atendidos por el doctor
 */
-int doctor_attended_patients(const Doctor *doctor);
+size_t doctor_attended_patients(const Doctor *doctor);
 
 /* Suma 1 a la cantidad de pacientes atendidos por el doctor
 *  Pre: el doctor fue registrado
