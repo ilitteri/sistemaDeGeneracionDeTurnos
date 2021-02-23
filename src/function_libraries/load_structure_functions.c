@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #include "../basic_tda/hash.h"
 #include "../basic_tda/abb.h"
@@ -9,11 +11,11 @@
 
 #include "../our_tda/patient/patient.h"
 #include "../our_tda/doctor/doctor.h"
-#include "../our_tda/patient/hash_patient.h"
+#include "../our_tda/patient/hash_patients.h"
 #include "../our_tda/turns/heap_patients.h"
 #include "../our_tda/turns/queue_patients.h"
-#include "../our_tda/turns/hash_turns"
-#include "../our_tda/doctor/bst_doctor.h"
+#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/doctor/bst_doctors.h"
 
 HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
 {
@@ -50,11 +52,16 @@ HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
     return turns;
 }
 
+void patient_destroy(void *patient)
+{
+    destroy_patient((Patient *)patient);
+}
+
 HashPatients *load_patients(lista_t *patient_csv_lines)
 {
     HashPatients *patient_register;
 
-    if  ((patient_register = hash_patients_create(destroy_patient)) == NULL)
+    if  ((patient_register = hash_patients_create(patient_destroy)) == NULL)
     {
         return NULL;
     }
