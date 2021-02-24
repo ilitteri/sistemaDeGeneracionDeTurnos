@@ -18,8 +18,6 @@
 /* Inclución de librerías de mensajes */
 #include "message_libraries/error_messages.h"
 
-#define CMD_SIZE 128
-
 #define CMD_PEDIR_TURNO "PEDIR_TURNO"
 #define CMD_ATENDER "ATENDER_SIGUIENTE"
 #define CMD_INFORME "INFORME"
