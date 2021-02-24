@@ -1,5 +1,0 @@
-Implementando la lectura de los archivos CSV, como almacenamos las líneas parseadas en una lista, luego de utilizarla debemos liberar la memoria pedida para la misma. Motivo por el cuál perderíamos la referncia a esos datos, que aún debemos utilizar. Entonces nos dimos cuenta de que necesitamos hacer copias de dichos datos cuando los cargamos en sus estructuras.
-
-Aún así debemos mantener una sola copia de dichos datos para no desperdiciar memoria en copias extras, por lo que concluimos en hacer la copia única en, para el caso de los pacientes, en su estructura (hash de pacientes), y para el caso de los doctores, en su estructura (arbol binario de doctores). Luego en las estructuras donde decidimos guardar los turnos, utilizaremos, no copias, sino referencias, a las especialidades, ya que necesitamos dos hash con las especialidades como claves.
-
-La función encargada de crear y cargar el esqueleto de las estructuras 
