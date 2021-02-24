@@ -16,34 +16,18 @@
         - [Almacenamiento de datos del archivo CSV de pacientes](#6.-Almacenamiento-de-datos-del-archivo-CSV-de-pacientes)
     - [Fase de comandos](#Fase-de-comandos)
     - [Fase de salida](#Fase-de-salida)
-- [Estructuras de datos](#Estructuras-de-datos)
-    - [Doctor](#Doctor)
-        - [Struct Doctor](#Struct-Doctor)
-        - [Primitivas Doctor](#Primitivas-Doctor)
-    - [Paciente](#Paciente)
-        - [Struct](#Struct-Paciente)
-        - [Primitivas](#Primitivas-Paciente)
-    - [Árbol de doctores](#Árbol-de-doctores)
-        - [Struct](#Struct-Árbol-de-Doctores)
-        - [Funciones](#Funciones-Árbol-de-Doctores)
-        - [Primitivas](#Primitivas-Árbol-de-Doctores)
-    - [Hash de pacientes](#Hash-de-pacientes)
-        - [Struct](#Struct-Hash-Pacientes)
-        - [Funciones](#Funciones-Hash-Pacientes)
-        - [Primitivas](#Primitivas-Hash-Pacientes)
-    - [Cola de Pacientes](#Cola-de-Pacientes)
-        - [Struct](#Struct-Cola-de-Pacientes)
-        - [Funciones](#Funciones-Cola-de-Pacientes)
-        - [Primitivas](#Primitivas-Cola-de-Pacientes)
-    - [Hash de turnos](#Hash-de-turnos)
-        - [Struct](#Struct-Hash-Turnos)
-        - [Funciones](#Funciones-Hash-Turnos)
-        - [Primitivas](#Primitivas-Hash-Turnos)
-    - [Heap de Regulares](#Heap-de-Regulares)
-        - [Struct](#Struct-Heap-de-Regulares)
-        - [Funciones](#Funciones-Heap-de-Regulares)
-        - [Primitivas](#Primitivas-Heap-de-Regulares)
-- [Código del programa](#Código-del-programa)
+
+
+|  | [Estructuras de Datos](#Estructuras-de-Datos) |  |
+| --- | --- | --- |
+| [Doctor](#Doctor)  | [Paciente](#Paciente)  | [Árbol de doctores](#Árbol-de-doctores)  |
+| [Hash de pacientes](#Hash-de-pacientes)  | [Cola de Pacientes](#Cola-de-Pacientes)  | [Heap de Pacientes](#Heap-de-Pacientes)  |
+| [Hash de turnos](#Hash-de-turnos)  | [Hash de turnos](#Hash-de-turnos)  | [Reporte](#Reporte)  |
+
+|  | [Código del programa](#Código-del-programa) |  |
+| --- | --- | --- |
+| [main.c](#main) | [load_structures.c](#load-structures) | [command_functions.c](#command-functions) |
+| [csv.c](#csv) | [error_messages.h](#error_messages) | [success_messages.h](#success_messages) |
 
 # Datos Personales del Grupo
 [*Indice*](#Tabla-de-Contenidos)
@@ -116,10 +100,12 @@ Manejo de errores y devolución de la fase la buena fase.
 
 # Estructuras de datos
 
-## Doctor
+## [Doctor](src/our_tda/doctor/doctor.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Doctor
+### Descripción
+
+### [Struct Doctor](src/our_tda/doctor/doctor.h)
 ```c
 typedef struct
 {
@@ -128,7 +114,7 @@ typedef struct
     int attended_patients;
 } Doctor;
 ```
-### Primitivas Doctor
+### [Primitivas Doctor](src/our_tda/doctor/doctor.h)
 
 ```c
 /* Registra un doctor, 
@@ -165,10 +151,12 @@ void doctor_attend_patient(Doctor *doctor);
 void doctor_destroy(Doctor *doctor);
 ```
 
-## Paciente
+## [Paciente](src/our_tda/patient/patient.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Paciente
+### Descripción
+
+### [Struct Paciente]((src/our_tda/patient/patient.h))
 ```c
 typedef struct
 {
@@ -177,7 +165,7 @@ typedef struct
 } Patient;
 ```
 
-### Primitivas Paciente
+### [Primitivas Paciente]((src/our_tda/patient/patient.h))
 ```c
 /* Registra un paciente */
 Patient *patient_check_in(char *name, size_t year);
@@ -198,20 +186,22 @@ size_t patient_entry_year(const Patient *patient);
 void destroy_patient(Patient *patient);
 ```
 
-## Árbol de doctores
+## [Árbol de doctores](stc/out_tda/doctor/bst_doctors.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Árbol de Doctores
+### Descripción
+
+### [Struct Árbol de Doctores](stc/out_tda/doctor/bst_doctors.h)
 ```c
 typedef abb_t BSTDoctors;
 ```
 
-### Funciones Árbol de Doctores
+### [Funciones Árbol de Doctores](stc/out_tda/doctor/bst_doctors.h)
 ```c
 typedef abb_comparar_clave_t bst_key_cmp;
 typedef abb_destruir_dato_t bst_doctor_destroy;
 ```
-### Primitivas Árbol de Doctores
+### [Primitivas Árbol de Doctores](stc/out_tda/doctor/bst_doctors.h)
 ```c
 /* Crea la estructura */
 BSTDoctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data);
@@ -247,15 +237,17 @@ void bst_doctors_in_order(BSTDoctors *doctors,
                   Report *report);
 ```
 
-## Hash de pacientes
+## [Hash de pacientes](src/our_tda/patient/hash_patients.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Hash Pacientes
+### Descripción
+
+### [Struct Hash Pacientes](src/our_tda/patient/hash_patients.h)
 ```c
 typedef hash_t HashPatients;
 ```
 
-### Primitivas Hash Pacientes
+### [Primitivas Hash Pacientes](src/our_tda/patient/hash_patients.h)
 ```c
 /* Crea la estructura */
 HashPatients *hash_patients_create(hash_destroy_patient patient_destroy);
@@ -281,10 +273,12 @@ Patient *hash_patients_get(const HashPatients *patients, const char *name);
 void hash_patients_destroy(HashPatients *patients);
 ```
 
-## Cola de Pacientes
+## [Cola de Pacientes](src/our_tda/turns/queue_patients.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Cola de Pacientes
+### Descripción
+
+### [Struct Cola de Pacientes](src/our_tda/turns/queue_patients.h)
 ```c
 typedef struct
 {
@@ -293,7 +287,7 @@ typedef struct
 } QueuePatients;
 ```
 
-### Primitivas Cola de Pacientes
+### [Primitivas Cola de Pacientes](src/our_tda/turns/queue_patients.h)
 ```c
 /* Crea la estructura */
 QueuePatients *queue_patients_create();
@@ -329,15 +323,17 @@ Patient *queue_patients_dequeue(QueuePatients *patients);
 size_t queue_patients_count(QueuePatients *urgent);
 ```
 
-## Hash de turnos
+## [Hash de turnos](src/our_tda/turns/hash_turns.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Hash Turnos
+### Descripción
+
+### [Struct Hash Turnos](src/our_tda/turns/hash_turns.h)
 ```c
 typedef hash_t Hash_Turns;
 ```
 
-### Primitivas Hash Turnos
+### [Primitivas Hash Turnos](src/our_tda/turns/hash_turns.h)
 ```c
 /* Crea la estructura */
 HashTurns *hash_turns_create();
@@ -376,15 +372,17 @@ size_t hash_turns_specialty_count(HashTurns *turns, char *specialty);
 void hash_turns_destroy(HashTurns *turns);
 ```
 
-## Heap de Regulares
+## [Heap de Pacientes](src/our_tda/turns/heap_patients.c)
 [*Indice*](#Tabla-de-Contenidos)
 
-### Struct Heap de Regulares
+### Descripción
+
+### [Struct Heap de Pacientes](src/our_tda/turns/heap_patients.h)
 ```c
 typedef heap_t Heap_Turns;
 ```
 
-### Primitivas Heap de Regulares
+### [Primitivas Heap de Pacientes](src/our_tda/turns/heap_patients.h)
 ```c
 /*  Crea la estrucutra */
 HeapPatients *heap_patients_create(HeapPatients_cmp cmp);
@@ -414,13 +412,16 @@ bool heap_patients_enqueue(HeapPatients *turns, Patient *patient);
 Patient *heap_patients_dequeue(HeapPatients *turns);
 ```
 
-## Reporte
+## [Reporte](src/our_tda/command/report.c)
+[*Indice*](#Tabla-de-Contenidos)
 
-### Struct Report
+### Descripción
+
+### [Struct Report](src/our_tda/command/report.h)
 ```c
 typedef struct Report Report;
 ```
-### Primitivas reporte
+### [Primitivas reporte](src/our_tda/command/report.h)
 ```c
 /* Crea la estructura */
 Report *report_create(const char *min, const char *max);
@@ -455,3 +456,35 @@ void report_destroy(Report *report);
 
 # Código del programa
 [*Indice*](#Tabla-de-Contenidos)
+
+## [main.c](main.c)
+
+### Descripción
+
+### Funciones
+
+## [load_structures.c](src/function_libraries/load_structures.c)
+
+### Descripción
+
+### Funciones
+
+## [command_functions.c](src/function_libraries/command_functions.c)
+
+### Descripción
+
+### Funciones
+
+## [csv.c](csv.c)
+
+### Descripción
+
+### Funciones
+
+## [error_messages.h](src/message_libraries/error_messages.h)
+
+### Descripción
+
+## [success_messages.h](src/message_libraries/success_messages.h)
+
+### Descripción
