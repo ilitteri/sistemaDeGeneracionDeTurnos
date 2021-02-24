@@ -26,7 +26,7 @@
 
 |  | [Código del programa](#Código-del-programa) |  |
 | --- | --- | --- |
-| [main.c](#main) | [load_structures.c](#load-structures) | [command_functions.c](#command-functions) |
+| [main.c](#main) | [load_structure_functions.c](#load-structures) | [command_functions.c](#command-functions) |
 | [csv.c](#csv) | [error_messages.h](#error_messages) | [success_messages.h](#success_messages) |
 
 # Datos Personales del Grupo
@@ -461,19 +461,104 @@ void report_destroy(Report *report);
 
 ### Descripción
 
-### Funciones
+Módulo principal que se encarga de ejecutar la función principal del programa haciendo uso de ambas librerías de funciones ([`load_structure_functions.c`](#load_structure_functions.c) y [`command_functions.c`](#command_functions.c)).
 
-## [load_structures.c](src/function_libraries/load_structures.c)
+Como es la encargada de crear las estructuras, también se hace responsable de la liberación de memoria de las mismas.
+
+<!-- ### Funciones -->
+
+## [load_structure_functions.c](src/function_libraries/load_structure_functions.c)
 
 ### Descripción
 
-### Funciones
+Librería que incluye las funciones que cargan los datos de los archivos CSV en memoria.
+
+### [Funciones](src/function_libraries/load_structure_functions.c)
+
+```c
+/* 
+*   Crea el esqueleto del diccionario de turnos urgentes y regulares utilizando
+*   las especialidades que se encuentran en los datos de los doctores.
+*   Pre: se creó la estructura doctor_csv_lines.
+*   Pos: estructura del tipo HashTurns sin datos relevantes.
+*/
+HashTurns *load_hash_turns(lista_t *doctor_csv_lines);
+
+/*  
+*   Con los datos de los pacientes, crea estructuras para almacenarlos, y
+*   almacena esas estructuras en un diccionario.
+*   Pre: se creó la estructura patients_csv_lines.
+*   Pos: estructura del tipo HashPatients con los datos de los pacientes cargados.
+*/
+HashPatients *load_patients(lista_t *patient_csv_lines);
+
+/*  
+*   Con los datos de los doctores, crea estructuras para almacenarlos, y
+*   almacena esas estructuras en un árbol binario.
+*   Pre: se creó la estructura doctor_csv_lines.
+*   Pos: estructura del tipo BSTDoctors con los datos de los doctores cargados.
+*/
+BSTDoctors *load_doctors(lista_t *doctor_csv_lines);
+```
 
 ## [command_functions.c](src/function_libraries/command_functions.c)
 
 ### Descripción
 
-### Funciones
+Librería que incluye a las funciones que se relacionan con la ejecución de los comandos del sistema.
+
+### [Funciones](src/function_libraries/command_functions.h)
+
+```c
+/*
+*   Se recibe un nombre de paciente y el nombre de una especialidad, y el 
+*   sistema le añade a la lista de espera de la especialidad correspondiente.
+*   Complejidad: 
+*       O(1) para casos urgentes porque, lo que hace en resúmen este
+*   comando, es encolar el turno en la estructura correspondiente, en el caso de 
+*   los urgentes corresponde a una cola entonces encolar es constante.
+*       O(log n) (siendo n la cantidad de pacientes en espera) para los casos 
+*   regulares porque, la estructura donde almacenamos los turnos regulares 
+*   corresponde a un heap, encolar es O(log n).
+*       Como almacenamos a ambas "colas de espera" en un hash, entonces
+*   acceder a ellas es constante, entonces no perjudica a la complejidad pedida.
+*/
+void make_appointment(HashTurns *turns, HashPatients *patients, char **parameters);
+
+/*
+*   Se recibe el nombre de le doctore que quedó libre, y este atiende al 
+*   siguiente paciente urgente (por orden de llegada). Si no hubiera ningún 
+*   paciente urgente, atiende al siguiente paciente con mayor antigüedad como 
+*   paciente en la clínica.
+*   Complejidad:
+*       O(log d) para los casos urgentes, la complejidad en este caso se la
+*   lleva la búsqueda del doctor para confirmar su existencia, ya que como
+*   almacenamos a los doctores en un árbol binario, su búsqueda cuesta O(log d)
+*   (siendo d la cantidad de doctores). Y atender al paciente cuesta O(1) porque
+*   los pacientes urgentes están encolados en una cola, y desencolarlos cuesta
+*   eso.
+*       O(log d + log n) para los casos regulares, la complejidad en este caso
+*   es la de buscar a los doctores más la de atender pacientes, que en este caso
+*   cuesta O(log r) siendo r la cantidad de pacientes regulares, ya que los
+*   turnos regulares los almacenamos en un heap, y desencolar cuesta eso.
+*/
+void attend_patient(HashTurns *turns, BSTDoctors *doctors, char **parameters);
+
+/*   
+*   El sistema imprime la lista de doctores en orden alfabético, junto con su 
+*   especialidad y el número de pacientes que atendieron desde que arrancó el 
+*   sistema. Opcionalmente, se puede especificar el rango (alfabético) de 
+*   doctores sobre los que se desean informes.
+*   Pre: se creó y llenó de datos un registro de doctores.
+*   Complejidad: 
+*       O(d) (siendo d la cantidad de doctores) en el peor de los casos ya que
+*   se debe recorrer todo el árbol en caso de que el rango del informe lo pida.
+*       O(log d) en el caso promedio, ya que no se recorre todo el árbol sino,
+*   que se corta el recorrido al llegar al límite superior.
+*/
+void generate_report(BSTDoctors *doctors, char **parameters);
+
+```
 
 ## [csv.c](csv.c)
 
@@ -485,6 +570,10 @@ void report_destroy(Report *report);
 
 ### Descripción
 
+Librería de mensajes de error.
+
 ## [success_messages.h](src/message_libraries/success_messages.h)
 
 ### Descripción
+
+Librería de mensajes de ejecución de comandos exitoso e información.
