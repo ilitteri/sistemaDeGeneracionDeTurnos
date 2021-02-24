@@ -1,0 +1,1 @@
+zyxcba: src/csv.o src/zyxcba.o src/function_libraries/command_functions.o src/function_libraries/strutil.o src/function_libraries/load_structure_functions.o src/basic_tda/lista.o src/our_tda/patient/hash_patients.o src/our_tda/turns/hash_turns.o src/our_tda/doctor/bst_doctors.o
