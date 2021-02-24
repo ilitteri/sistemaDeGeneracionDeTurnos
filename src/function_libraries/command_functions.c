@@ -13,6 +13,8 @@
 #include "../our_tda/patient/hash_patients.h"
 #include "../our_tda/turns/hash_turns.h"
 
+#define CHR_255 (char)255
+
 /* Firma de funciones auxiliares */
 static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients *patients);
 static void cmd1_print_result(char *patient_name, char *specialty, size_t n);
@@ -22,19 +24,15 @@ static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *
 static void cmd2_print_result(char *patient_name, char *specialty, size_t n);
 static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctors, Patient **patient);
 /* Funciones auxiliares para el comando 3 */
-static bool cm3_error_handler(char **parameters);
-static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters);
+// static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters);
 static bool visit_doctors_in_range(const char *clave, void *dato, void *extra);
 static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max);
 
-void make_appointment(char** parameters, HashTurns *turns, HashPatients *patients)
-{
-    if (!cmd1_error_handler(parameters, turns, patients))
-    {
-        return;
-    }
+static bool parameters_error_handler(char **parameters, char *cmd, size_t param_limit);
 
-    if (!ask_turn(parameters, turns, patients))
+void make_appointment(HashTurns *turns, HashPatients *patients, char** parameters)
+{
+    if (!cmd1_error_handler(parameters, turns, patients) || !ask_turn(parameters, turns, patients))
     {
         return;
     }
@@ -42,7 +40,7 @@ void make_appointment(char** parameters, HashTurns *turns, HashPatients *patient
     cmd1_print_result(parameters[0], parameters[1], hash_turns_specialty_count(turns, parameters[1])-1);
 }
 
-void attend_patient(char** parameters, HashTurns *turns, BSTDoctors *doctors)
+void attend_patient(HashTurns *turns, BSTDoctors *doctors, char** parameters)
 {
     if (!cmd2_error_handler(parameters, turns, doctors))
     {
@@ -62,12 +60,11 @@ void attend_patient(char** parameters, HashTurns *turns, BSTDoctors *doctors)
 
 void generate_report(BSTDoctors *doctors, char **parameters)
 {
-    if (!cm3_error_handler(parameters) || 
-        !verify_doctor_existance(doctors, parameters))
+    if (!parameters_error_handler(parameters, "INFORME", 2))
     {
         return;
     }
-    printf(DOCTOR_COUNT, bst_doctors_count(doctors));
+
     execute_cmd3(doctors, parameters[0], parameters[1]);
 }
 
@@ -75,20 +72,14 @@ static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients
 {
     bool ok = true;
 
-    size_t parameters_count = 1;
-    for (size_t i = 0; parameters[i] != NULL; i++)
+    if(!parameters_error_handler(parameters, "PEDIR_TURNO", 3))
     {
-        parameters_count++;
-    }
-    if (parameters_count != 3)
-    {
-        printf("ERROR: cantidad de parametros invalidos para comando '%s'\n", "PEDIR_TURNO");
-        ok = false;
+        return false;
     }
 
     if (!hash_patients_exists(patients, parameters[0]))
     {
-        printf("ERROR: no existe le paciente '%s'\n", parameters[0]);
+        printf(ERROR_PATIENT, parameters[0]);
         ok = false;
     }
     if (!hash_turns_specialty_exists(turns, parameters[1]))
@@ -108,7 +99,7 @@ static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients
 static void cmd1_print_result(char *patient_name, char *specialty, size_t n)
 {
     printf("Paciente %s encolado\n", patient_name);
-    printf("%ld paciente(s) en espera para %s\n", n, specialty);
+    printf("%ld paciente(s) en espera para %s\n", n+1, specialty);
 }
 
 static bool ask_turn(char** parameters, HashTurns *turns, HashPatients *patients)
@@ -120,16 +111,11 @@ static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *
 {
     bool ok = true;
 
-    size_t parameters_count = 1;
-    for (size_t i = 0; parameters[i] != NULL; i++)
+    if(!parameters_error_handler(parameters, "ATENDER_SIGUIENTE", 1))
     {
-        parameters_count++;
+        return false;
     }
-    if (parameters_count != 1)
-    {
-        printf("ERROR: cantidad de parametros invalidos para comando '%s'\n", "ATENDER_SIGUIENTE");
-        ok = false;
-    }
+
 
     if (bst_doctors_get_doctor(doctors, parameters[0]) == NULL)
     {
@@ -153,64 +139,87 @@ static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctor,
 
     if (*patient == NULL)
     {
-        printf("No hay pacientes en espera");
+        printf(NO_PATIENTS);
         return false;
     }
 
     return true;
 }
 
-static bool cm3_error_handler(char **parameters)
+static bool parameters_error_handler(char **parameters, char *cmd, size_t param_limit)
 {
     size_t param_count;
     for (param_count = 0; parameters[param_count] != NULL; param_count++);
-    if (param_count != 2)
+    if (param_count != param_limit)
     {
-        printf(ERROR_CMD_PARAMS_COUNT, "INFORME");
+        printf(ERROR_CMD_PARAMS_COUNT, cmd);
         return false;
     }
 
     return true;
 }
 
-static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters)
-{
-    Doctor *min = bst_doctors_get_doctor(doctors, parameters[0]);
-    Doctor *max = bst_doctors_get_doctor(doctors, parameters[1]);
+// static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters)
+// {
+//     Doctor *min = bst_doctors_get_doctor(doctors, parameters[0]);
+//     Doctor *max = bst_doctors_get_doctor(doctors, parameters[1]);
 
-    if (min == NULL || max == NULL)
-    {
-        printf(ERROR_DOCTOR, min == NULL ? parameters[0] : parameters[1]);
-        return false;
-    }
+//     if (min == NULL || max == NULL)
+//     {
+//         printf(ERROR_DOCTOR, min == NULL ? parameters[0] : parameters[1]);
+//         return false;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 static bool visit_doctors_in_range(const char *clave, void *dato, void *extra)
 {
     Report *report = extra;
-    if (strcmp(clave, report_min(report)) < 0 || strcmp(clave, report_max(report)) > 0)
+    if (strcmp(clave, report_max(report)) > 0)
     {
         return false;
     }
-    Doctor *doctor = dato;
-    printf(DOCTOR_REPORT, report_get_count(report), doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
-    report_count_increment(report);
+    else if (strcmp(clave, report_min(report)) >= 0)
+    {
+        Doctor *doctor = dato;
+        printf(DOCTOR_REPORT, report_get_count(report)+1, doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
+        report_count_increment(report);
+    }
+    return true;
+}
+static bool visit_count_doctors(const char *clave, void *dato, void *extra)
+{
+    Report *report = extra;
+    if (strcmp(clave, report_max(report)) > 0)
+    {
+        return false;
+    }
+    else if (strcmp(clave, report_min(report)) >= 0)
+    {
+        report_count_increment(report);
+    }
     return true;
 }
 
 static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
 {
-    Report *doctors_report;
-
-    if ((doctors_report = report_create(min, max)) == NULL)
+    Report *doctor_counter_report;
+    if ((doctor_counter_report = report_create(min, max)) == NULL)
     {
-        printf(ERROR_MEM, "doctors_report");
+        printf(ERROR_MEM, "doctor_counter_report");
         return;
     }
+    bst_doctors_in_order(doctors, visit_count_doctors, doctor_counter_report);
+    printf(DOCTOR_COUNT, report_get_count(doctor_counter_report));
+    report_destroy(doctor_counter_report);
 
-    bst_doctors_in_order(doctors, visit_doctors_in_range, doctors_report);
-
-    report_destroy(doctors_report);
+    Report *doctor_print_report;
+    if ((doctor_print_report = report_create(min, max)) == NULL)
+    {
+        printf(ERROR_MEM, "doctor_print_report");
+        return;
+    }
+    bst_doctors_in_order(doctors, visit_doctors_in_range, doctor_print_report);
+    report_destroy(doctor_print_report);
 }

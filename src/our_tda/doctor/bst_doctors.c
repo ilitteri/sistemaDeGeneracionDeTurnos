@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "bst_doctors.h"
 #include "../../basic_tda/abb.h"

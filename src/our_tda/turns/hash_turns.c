@@ -30,12 +30,12 @@ void _destroy_patient(void *patient)
 
 void _queue_patients_destroy(void *queue)
 {
-    queue_patients_destroy((QueuePatients *)queue, _destroy_patient);
+    queue_patients_destroy((QueuePatients *)queue, NULL);
 }
 
 void _heap_patients_destroy(void *heap)
 {
-    heap_patients_destroy((HeapPatients *)heap, _destroy_patient);
+    heap_patients_destroy((HeapPatients *)heap, NULL);
 }
 
 HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
@@ -117,7 +117,7 @@ int patient_entry_year_cmp(const void *n, const void *m)
     size_t n_year = patient_entry_year((Patient *)n);
     size_t m_year = patient_entry_year((Patient *)m);
 
-    return n_year == m_year ? 0 : n_year > m_year ? 1 : -1; 
+    return n_year == m_year ? 0 : n_year > m_year ? -1 : 1; 
 }
 
 static bool add_regular_specialty(hash_t *regular, char* specialty)
@@ -130,11 +130,6 @@ static bool add_regular_specialty(hash_t *regular, char* specialty)
             return false;
         }
         hash_guardar(regular, specialty, waiting_patients);
-    }
-
-    else
-    {
-        return false;
     }
     
     return true;
@@ -175,7 +170,7 @@ Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *speci
 
 bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
 {
-    return hash_turns_specialty_exists(turns, specialty);
+    return hash_pertenece(turns->urgent, specialty);
 }
 
 size_t hash_turns_specialty_count(HashTurns *turns, char *specialty)

@@ -32,6 +32,7 @@ QueuePatients *queue_patients_create()
 void queue_patients_destroy(QueuePatients *urgent, void (*patients_destroy)(void *))
 {
     cola_destruir(urgent->patients, patients_destroy);
+    free(urgent);
 }
 
 bool queue_patients_is_empty(const QueuePatients *urgent)

@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	doctors_file = fopen(doctors_path, "r");
 	handle_file_error(errno, doctors_path);
 
-	patients_file = fopen(doctors_path, "r");
+	patients_file = fopen(patients_path, "r");
 	handle_file_error(errno, patients_path);
 
 	lista_t *doctors_data = process_doctors_data(doctors_file);
@@ -83,13 +83,11 @@ static bool process_command(char *cmd, char **parameters,
 	if (strcmp(cmd, CMD_PEDIR_TURNO) == 0)
 	{
 		make_appointment(turns, patients, parameters);
-		return false;
 	}
 
 	else if (strcmp(cmd, CMD_ATENDER) == 0)
 	{
 		attend_patient(turns, doctors, parameters);
-		return false;
 	}
 
 	else if (strcmp(cmd, CMD_INFORME) == 0)
@@ -211,7 +209,7 @@ static HashTurns * init_hash_turns(lista_t *doctors_data, lista_t *patients_data
 	return turns;
 }
 
-static BSTDoctors * register_doctors(lista_t *doctors_data, lista_t *patients_data)
+static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_data)
 {
 	BSTDoctors *doctors_register;
 	if ((doctors_register = load_doctors(doctors_data)) == NULL)
@@ -224,7 +222,7 @@ static BSTDoctors * register_doctors(lista_t *doctors_data, lista_t *patients_da
 	return doctors_register;
 }
 
-static HashPatients * register_patients(BSTDoctors *doctors_register, lista_t *patients_data)
+static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *patients_data)
 {
 	HashPatients *patients_register;
 	if ((patients_register = load_patients(patients_data)) == NULL)
