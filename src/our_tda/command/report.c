@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_CHAR "z"    // el siguiente a 'z' en ASCII.
-#define MIN_CHAR "A"    // el anterior a 'A en ASCII.
+#define MAX_CHAR "z"
+#define MIN_CHAR "A"
 #define MIN_CHAR_SIZE 2
 
 typedef struct Report
@@ -59,20 +59,10 @@ size_t report_get_count(const Report *report)
     return report->counter;
 }
 
-// size_t report_get_doctors_count(const Report *report)
-// {
-//     return report->doctors_count;
-// }
-
 void report_count_increment(Report *report)
 {
     report->counter++;
 }
-
-// void report_doctors_count_increment(Report *report)
-// {
-//     report->doctors_count++;
-// }
 
 void report_destroy(Report *report)
 {

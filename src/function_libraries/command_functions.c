@@ -24,15 +24,17 @@ static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *
 static void cmd2_print_result(char *patient_name, char *specialty, size_t n);
 static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctors, Patient **patient);
 /* Funciones auxiliares para el comando 3 */
-// static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters);
 static bool visit_doctors_in_range(const char *clave, void *dato, void *extra);
 static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max);
+static void print_report(BSTDoctors *doctors, const char *min, const char *max);
+static void pre_doctor_countint(BSTDoctors *doctors, const char *min, const char *max);
 
 static bool parameters_error_handler(char **parameters, char *cmd, size_t param_limit);
 
 void make_appointment(HashTurns *turns, HashPatients *patients, char** parameters)
 {
-    if (!cmd1_error_handler(parameters, turns, patients) || !ask_turn(parameters, turns, patients))
+    if (!cmd1_error_handler(parameters, turns, patients) || 
+        !ask_turn(parameters, turns, patients))
     {
         return;
     }
@@ -159,20 +161,6 @@ static bool parameters_error_handler(char **parameters, char *cmd, size_t param_
     return true;
 }
 
-// static bool verify_doctor_existance(BSTDoctors *doctors, char **parameters)
-// {
-//     Doctor *min = bst_doctors_get_doctor(doctors, parameters[0]);
-//     Doctor *max = bst_doctors_get_doctor(doctors, parameters[1]);
-
-//     if (min == NULL || max == NULL)
-//     {
-//         printf(ERROR_DOCTOR, min == NULL ? parameters[0] : parameters[1]);
-//         return false;
-//     }
-
-//     return true;
-// }
-
 static bool visit_doctors_in_range(const char *clave, void *dato, void *extra)
 {
     Report *report = extra;
@@ -202,7 +190,7 @@ static bool visit_count_doctors(const char *clave, void *dato, void *extra)
     return true;
 }
 
-static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
+static void pre_doctor_countint(BSTDoctors *doctors, const char *min, const char *max)
 {
     Report *doctor_counter_report;
     if ((doctor_counter_report = report_create(min, max)) == NULL)
@@ -213,7 +201,10 @@ static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
     bst_doctors_in_order(doctors, visit_count_doctors, doctor_counter_report);
     printf(DOCTOR_COUNT, report_get_count(doctor_counter_report));
     report_destroy(doctor_counter_report);
+}
 
+static void print_report(BSTDoctors *doctors, const char *min, const char *max)
+{
     Report *doctor_print_report;
     if ((doctor_print_report = report_create(min, max)) == NULL)
     {
@@ -222,4 +213,10 @@ static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
     }
     bst_doctors_in_order(doctors, visit_doctors_in_range, doctor_print_report);
     report_destroy(doctor_print_report);
+}
+
+static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
+{
+    pre_doctor_countint(doctors, min, max);
+    print_report(doctors, min, max);
 }

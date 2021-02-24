@@ -111,7 +111,7 @@ int patient_entry_year_cmp(const void *n, const void *m)
 
     else if (n == NULL || m == NULL)
     {
-        return n == NULL ? -1 : 1;
+        return n == NULL ? 1 : -1;
     }
 
     size_t n_year = patient_entry_year((Patient *)n);
