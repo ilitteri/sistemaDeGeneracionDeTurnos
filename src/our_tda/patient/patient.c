@@ -3,11 +3,11 @@
 
 #include "patient.h"
 
-typedef struct Patient
+struct Patient
 {
     char *name;
     size_t entry_year;
-} Patient;
+};
 
 static char *copy_name(char *original_name)
 {   

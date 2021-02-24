@@ -1,3 +1,6 @@
+#ifndef HASH_TURNS_H
+#define HASH_TURNS_H
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -50,3 +53,5 @@ size_t hash_turns_specialty_count(HashTurns *turns, char *specialty);
 
 /*  Destruye la estructura */
 void hash_turns_destroy(HashTurns *turns);
+
+#endif

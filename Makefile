@@ -9,7 +9,7 @@ OBJS := $(SOURCES:%.c=$(BUILD_DIR)/%.o)
 
 LDLIBS := -lm
 LDFLAGS := -g
-CFLAGS := -g -std=c11 -Wall -Wconversion -Wtype-limits -pedantic -Werror
+CFLAGS := -g -std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror
 
 all: $(BUILD_DIR)/$(TARGET)
 

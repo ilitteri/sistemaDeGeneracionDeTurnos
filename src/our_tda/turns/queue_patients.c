@@ -4,11 +4,11 @@
 #include "../patient/patient.h"
 #include "queue_patients.h"
 
-typedef struct Queue
+struct Queue
 {
     cola_t *patients;
     size_t count;
-} QueuePatients;
+};
 
 QueuePatients *queue_patients_create()
 {

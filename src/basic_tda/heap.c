@@ -13,13 +13,13 @@
 
 /* Definicion de estructuras */
 
-typedef struct heap
+struct heap
 {
     void **datos;
     size_t tam;
     size_t cant;
     cmp_func_t cmp;
-} heap_t;
+};
 
 /* Declaracion de funciones auxiliares */
 

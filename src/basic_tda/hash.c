@@ -34,27 +34,27 @@ static void destruir_campo(hash_t *hash, size_t posicion);
 
 // Definiciones de structs.
 
-typedef struct hash_campo
+struct hash_campo
 {
     void *dato;
     char *clave;
     estados estado;
-} hash_campo_t;
+};
 
-typedef struct hash
+struct hash
 {
     hash_campo_t *tabla;
     size_t cantidad_ocupados;
     size_t cantidad_borrados;
     size_t capacidad;
     hash_destruir_dato_t destruir_dato;
-} hash_t;
+};
 
-typedef struct hash_iter
+struct hash_iter
 {
     const hash_t *hash;
     size_t posicion;
-} hash_iter_t;
+};
 
 // Implementacion de primitivas y funciones auxiliares.
 

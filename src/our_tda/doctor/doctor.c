@@ -3,12 +3,12 @@
 
 #include "doctor.h"
 
-typedef struct Doctor
+struct Doctor
 {
     char *name;
     char *specialty;
     size_t attended_patiens;
-} Doctor;
+};
 
 Doctor *doctor_check_in(char *name, char *specialty)
 {

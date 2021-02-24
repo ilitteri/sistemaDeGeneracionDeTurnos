@@ -1,3 +1,6 @@
+#ifndef PATIENT_H
+#define PATIENT_H
+
 #include <stdlib.h>
 
 typedef struct Patient Patient;
@@ -19,3 +22,5 @@ size_t patient_entry_year(const Patient *patient);
 
 /* Destruye los datos del paciente */
 void destroy_patient(Patient *patient);
+
+#endif

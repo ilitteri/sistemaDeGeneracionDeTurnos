@@ -9,26 +9,26 @@
 
 /* Definicion de Structs */
 
-typedef struct abb_nodo
+struct abb_nodo
 {
     struct abb_nodo *izq;
     struct abb_nodo *der;
     char *clave;
     void *dato;
-} abb_nodo_t;
+};
 
-typedef struct abb
+struct abb
 {
     abb_nodo_t *raiz;
     abb_comparar_clave_t cmp;
     abb_destruir_dato_t destruir_dato;
     size_t cantidad;
-} abb_t;
+};
 
-typedef struct abb_iter
+struct abb_iter
 {
     pila_t *estados;
-} abb_iter_t;
+};
 
 /* Definicion de enums */
 

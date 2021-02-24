@@ -1,3 +1,6 @@
+#ifndef QUEUE_PATIENTS_H
+#define QUEUE_PATIENTS_H
+
 #include <stdlib.h>
 
 #include "../patient/patient.h"
@@ -40,3 +43,5 @@ Patient *queue_patients_dequeue(QueuePatients *patients);
 *   Pre: la estructura fue creada.
 */
 size_t queue_patients_count(QueuePatients *urgent);
+
+#endif

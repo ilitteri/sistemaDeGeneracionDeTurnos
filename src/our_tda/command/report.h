@@ -1,3 +1,6 @@
+#ifndef REPORT_H
+#define REPORT_H
+
 #include <stdlib.h>
 
 typedef struct Report Report;
@@ -31,3 +34,5 @@ void report_count_increment(Report *report);
 
 /* Destruye la estructura */
 void report_destroy(Report *report);
+
+#endif

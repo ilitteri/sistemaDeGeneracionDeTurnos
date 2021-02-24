@@ -1,3 +1,6 @@
+#ifndef HEAP_PATIENTS_H
+#define HEAP_PATIENTS_H
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -40,3 +43,5 @@ bool heap_patients_enqueue(HeapPatients *turns, Patient *patient);
 *   Pos: devuelve el paciente desencolado.
 */  
 Patient *heap_patients_dequeue(HeapPatients *turns);
+
+#endif

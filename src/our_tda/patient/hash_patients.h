@@ -1,3 +1,6 @@
+#ifndef HASH_PATIENTS_H
+#define HASH_PATIENTS_H
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -29,3 +32,5 @@ Patient *hash_patients_get(const HashPatients *patients, const char *name);
 
 /* Destruye la estrucura y sus datos en caso de existir remanentes */
 void hash_patients_destroy(HashPatients *patients);
+
+#endif

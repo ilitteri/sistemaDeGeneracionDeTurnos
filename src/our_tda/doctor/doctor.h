@@ -1,3 +1,6 @@
+#ifndef DOCTOR_H
+#define DOCTOR_H
+
 #include <stdlib.h>
 
 /* Struct */
@@ -37,3 +40,5 @@ void doctor_attend_patient(Doctor *doctor);
 
 /* Destruye los datos del doctor */
 void doctor_destroy(Doctor *doctor);
+
+#endif

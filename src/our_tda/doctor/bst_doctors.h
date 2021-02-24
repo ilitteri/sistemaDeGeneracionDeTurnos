@@ -1,3 +1,6 @@
+#ifndef BST_DOCTORS_H
+#define BST_DOCTORS_H
+
 #include <stdlib.h>
 
 #include "../../basic_tda/abb.h"
@@ -47,3 +50,5 @@ void bst_doctors_destroy(BSTDoctors *doctors);
 void bst_doctors_in_order(BSTDoctors *doctors,
                   bool visit(const char *, void *, void *),
                   Report *report);
+
+#endif

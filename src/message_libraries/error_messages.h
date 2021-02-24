@@ -1,5 +1,5 @@
-#ifndef __ERROR_MESSAGES__H_
-#define __ERROR_MESSAGES__H_
+#ifndef ERROR_MESSAGES_H
+#define ERROR_MESSAGES_H
 
 #define ERROR_PARAMS_COUNT "No se recibieron los 2 (dos) parametros: <archivo doctores> y <archivo pacientes>\n"
 #define ERROR_FILE "No se pudo leer archivo %s\n"

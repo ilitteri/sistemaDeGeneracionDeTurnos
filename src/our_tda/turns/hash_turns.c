@@ -12,11 +12,11 @@
 #define URGENT "URGENTE"
 #define REGULAR "REGULAR"
 
-typedef struct Hash
+struct Hash
 {
     hash_t *urgent;
     hash_t *regular;
-} HashTurns;
+};
 
 static bool add_urgent_turn(hash_t *urgent, char *specialty, Patient *patient);
 static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient);

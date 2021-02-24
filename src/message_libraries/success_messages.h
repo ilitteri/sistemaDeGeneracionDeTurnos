@@ -1,5 +1,5 @@
-#ifndef __SUCCESS_MESSAGES__H_
-#define __SUCCESS_MESSAGES__H_
+#ifndef SUCCESS_MESSAGES_H
+#define SUCCESS_MESSAGES_H
 
 #define PATIENT_ENQUEUED "Paciente %s encolado\n"
 #define PATIENT_ATTENDED "Se atiende a %s\n"
