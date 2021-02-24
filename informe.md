@@ -153,7 +153,7 @@ char *doctor_specialty(const Doctor *doctor);
 *  Pre: el doctor fue registrado
 *  Post: devuelve la cantidad de pacientes atendidos por el doctor
 */
-int doctor_attended_patients(const Doctor *doctor);
+size_t doctor_attended_patients(const Doctor *doctor);
 
 /* Suma 1 a la cantidad de pacientes atendidos por el doctor
 *  Pre: el doctor fue registrado
@@ -180,7 +180,7 @@ typedef struct
 ### Primitivas Paciente
 ```c
 /* Registra un paciente */
-Patient *patient_check_in(char *name, size_t entry_year);
+Patient *patient_check_in(char *name, size_t year);
 
 /*  Obtiene el nombre de el paciente (no modifica al paciente)
 *   Pre: el paciente fué registrado.
@@ -193,6 +193,9 @@ char *patient_name(const Patient *patient);
 *   Pos: anio de registro del paciente.
 */
 size_t patient_entry_year(const Patient *patient);
+
+/* Destruye los datos del paciente */
+void destroy_patient(Patient *patient);
 ```
 
 ## Árbol de doctores
@@ -225,14 +228,23 @@ bool bst_doctors_save_doctor(BSTDoctors *doctors, const char *doctor_name, Docto
 */
 Doctor *bst_doctors_get_doctor(const BSTDoctors *doctors, const char *doctor_name);
 
-/* Informa la cantidad de doctores que hay en la estructura.
-*  Pre: la estrucutra fue creada, se registró al doctor y se guardó en la estructura
-*  Pos: devuelve la cantidada de doctores doctor registrados en la estructura.
+/* Devuelve el struct doctor correspondiente al nombre de este.
+*  Pre: la estrucutra fue creada, se registró al doctor y se guardó en la estructura.
+*  Pos: se devulve la cantidad de doctores registrados.
 */
 size_t bst_doctors_count(BSTDoctors *doctors);
 
 /* Destruye la estructura y sus datos si bst_doctor_destroy es distinto de NULL */
 void bst_doctors_destroy(BSTDoctors *doctors);
+
+/* Implementa el iterador interno, que recorre el arbol in-order.
+   "visitar" es una función de callback que recibe la clave, el valor y un
+   puntero extra, y devuelve true si se debe seguir iterando, false en caso
+   contrario).
+ */
+void bst_doctors_in_order(BSTDoctors *doctors,
+                  bool visit(const char *, void *, void *),
+                  Report *report);
 ```
 
 ## Hash de pacientes
@@ -250,15 +262,20 @@ HashPatients *hash_patients_create(hash_destroy_patient patient_destroy);
 
 /*  Guarda un paciente en la estrucutra
 *   Pre: la estrucutra fue creada, se registró al paciente.
-*   Pos: se guarda al paciente en la estructura.
+*   Pos: devuelve si el paciente se registró correctamente.
 */
 bool hash_patients_save(HashPatients *patients, Patient *patient);
 
 /*  Informa si el paciente está registrado
 *   Pre: la estrucutra fue creada, se registró al paciente.
-*   Pos: el paciente está guardado o no.
+*   Pos: devuelve si el paciente estaba registrado anteriormente.
 */
 bool hash_patients_exists(const HashPatients *patients, const char *name);
+
+/*  Devuelve un paciente
+*   Pre: la estrucutra fue creada, se registró al paciente.
+*/
+Patient *hash_patients_get(const HashPatients *patients, const char *name);
 
 /* Destruye la estrucura y sus datos en caso de existir remanentes */
 void hash_patients_destroy(HashPatients *patients);
@@ -284,7 +301,7 @@ QueuePatients *queue_patients_create();
 /*  Destruye la estrucutura .
 *   Pre: la estructura fue creada.
 */
-void queue_patients_destroy(QueuePatients *patients, void (*patients_destroy)(Patient *));
+void queue_patients_destroy(QueuePatients *patients, void (*patients_destroy)(void *));
 
 /*  Informa si la cola se encuentra vacía (no modifica a la cola).
 *   Pre: la estructura fue creada.
@@ -305,6 +322,11 @@ Patient *queue_patients_first(const QueuePatients *patients);
 *   Pre: la estructura fue creada.
 */
 Patient *queue_patients_dequeue(QueuePatients *patients);
+
+/*  Informa la cantidad de pacientes en espera.
+*   Pre: la estructura fue creada.
+*/
+size_t queue_patients_count(QueuePatients *urgent);
 ```
 
 ## Hash de turnos
@@ -317,10 +339,41 @@ typedef hash_t Hash_Turns;
 
 ### Primitivas Hash Turnos
 ```c
-Hash_Turns *hash_turns_create(hash_turn_destroy destroy_data);
-bool hash_turns_save(Hash_Turns *turns, const char *specialty, Patient *patient);
-bool hash_turns_specialty_exists(const Hash_Turns *turns, const char *specialty);
-void hash_turns_destroy(Hash_Turns *turns);
+/* Crea la estructura */
+HashTurns *hash_turns_create();
+
+/*  Agrega un paciente a la cola de espera (dependiendo de la urgencia, va a
+*   una u otra).
+*   Pre: la estructura HashTurns fué creada.
+*/
+bool hash_turns_add_turn(HashTurns *turns, char* urgency, char *specialty, Patient *patient);
+
+/*  Agrega una especialidad a el diccionario de turnos urgentes y regulares.
+*   Pre: la estructura HashTurns fué creada.
+*/
+bool hash_turns_add_specialty(HashTurns *turns, char *specialty);
+
+/*  Atiende al siguiente paciente en espera.
+*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el
+*       doctor está especializado en ella.
+*   Pos: datos del paciente desencolado.
+*/
+Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
+
+/*  Informa si existe una determinada especialidad.
+*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el doctor
+*       está especializado en ella.
+*   Pos: true si existe, false si no.
+*/
+bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
+
+/*  Informa la cantidad de pacientes en espera de una especialidad.
+*   Pre: la estructura HashTurns fué creada.
+*/
+size_t hash_turns_specialty_count(HashTurns *turns, char *specialty);
+
+/*  Destruye la estructura */
+void hash_turns_destroy(HashTurns *turns);
 ```
 
 ## Heap de Regulares
@@ -333,11 +386,71 @@ typedef heap_t Heap_Turns;
 
 ### Primitivas Heap de Regulares
 ```c
-Heap_Turns *heap_regulars_create(heap_key_cmp cmp);
-void heap_regulars_destroy(Heap_Turns *turns, void (*destroy_turn) (Patient *p));
-size_t heap_regulars_count(const Heap_Turns *turns);
-bool heap_regulars_enqueue(const Heap_Turns *turns);
-Heap_Turns *heap_regulars_dequeue(Heap_Turns *turns); 
+/*  Crea la estrucutra */
+HeapPatients *heap_patients_create(HeapPatients_cmp cmp);
+
+/*  Destruye la estrucutra, y si su función de destrucción no es NULL, también
+*   sus datos.
+*   Pre: la estructura fué creada.
+*   Pos: se libera la memoria pedida para la estructura.
+*/
+void heap_patients_destroy(HeapPatients *turns, void (*patient_destroy) (void *));
+
+/*  Informa la cantidad de pacientes en espera (no modifica la estructura).
+*   Pre: la estructura fue creada.
+*/
+size_t heap_patients_count(const HeapPatients *turns);
+
+/*  Encola un paciente.
+*   Pre: la estructura fué creada.
+*   Pos: devuelve si el paciente se encoló correctamente.
+*/
+bool heap_patients_enqueue(HeapPatients *turns, Patient *patient);
+
+/*  Desencola un paciente.
+*   Pre: la estructura fué creada.
+*   Pos: devuelve el paciente desencolado.
+*/  
+Patient *heap_patients_dequeue(HeapPatients *turns);
+```
+
+## Reporte
+
+### Struct Report
+```c
+typedef struct Report Report;
+```
+### Primitivas reporte
+```c
+/* Crea la estructura */
+Report *report_create(const char *min, const char *max);
+
+/*  Devuelve la cota inferior del recorrido del informe.
+*   Pre: la estructura fué creada.
+*   Pos: nombre o letra que marca límite inferior de la búsqueda, si es vacío,
+*       se guarda "`" como máximo caracter (uno más grande que la "z" en ASCII).
+*/
+char *report_min(const Report *report);
+
+/*  Devuelve la cota superior del recorrido del informe.
+*   Pre: la estructura fué creada.
+*   Pos: nombre o letra que marca límite superior de la búsqueda, si es vacío,
+*       se guarda "{" como máximo caracter (uno más grande que la "z" en ASCII).
+*/
+char *report_max(const Report *report);
+
+/*  Informa la cantidad de doctores incluídos en el informe 
+*   Pre: la estructura fué creada.
+*/
+size_t report_get_count(const Report *report);
+
+/*  Incrementa en uno el contador interno de la estructura.
+*   Pre: la estructura fué creada.
+*/
+void report_count_increment(Report *report);
+
+/* Destruye la estructura */
+void report_destroy(Report *report);
 ```
 
 # Código del programa
