@@ -355,53 +355,62 @@ Patient *queue_patients_dequeue(QueuePatients *patients);
 size_t queue_patients_count(QueuePatients *urgent);
 ```
 
-## [Hash de turnos](src/our_tda/turns/hash_turns.c)
+## [Hash de turnos](src/our_tda/turns/turns_register.c)
 [*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
-### [Struct Hash Turnos](src/our_tda/turns/hash_turns.h)
+Esta estructura es la encargada de almacenar dentro de sí dos estructuras, ambas siendo hash, cada hash corresponde a una urgencia, por eso son dos. Cada hash tiene como claves a cada especialidad registrada a la hora que se registraron los doctores, y como valor, en caso del hash de turnos urgentes, una cola de pacientes, y para el caso del hash de turnos regulares, cada value corresponde a un heap de pacientes. Todos estos valores (claves, heaps y colas) se generaron vacíos luego de la fase inicial.
+
+La estructura interna consta de 2 hash como se mencionón antes. La función primitiva que lo crea recibe como parámetros las funciones de destrucción de datos para cada uno de los hash que también se crean en ella.
+
+Decidimos crear esta estructura para tener de forma prolija y en un solo lugar (estructura) todo lo relacionado con el registro de turnos, además de que el comportamiento de la misma se justifica solo leyendo las primitivas que implementamos.
+
+La primitiva encargada de liberar su memoria, destruye ambos hash por separado y luego la estructura en sí.
+
+### [Struct Hash Turnos](src/our_tda/turns/turns_register.h)
 ```c
-typedef hash_t Hash_Turns;
+typedef hash_t TurnsRegister;
 ```
 
-### [Primitivas Hash Turnos](src/our_tda/turns/hash_turns.h)
+### [Primitivas Hash Turnos](src/our_tda/turns/turns_register.h)
 ```c
 /* Crea la estructura */
-HashTurns *hash_turns_create();
+TurnsRegister *turns_register_create(turns_register_destroy_data destroy_queue_patients, 
+                            turns_register_destroy_data destroy_heap_patients);
 
 /*  Agrega un paciente a la cola de espera (dependiendo de la urgencia, va a
 *   una u otra).
-*   Pre: la estructura HashTurns fué creada.
+*   Pre: la estructura TurnsRegister fué creada.
 */
-bool hash_turns_add_turn(HashTurns *turns, char* urgency, char *specialty, Patient *patient);
+bool turns_register_add_turn(TurnsRegister *turns, char* urgency, char *specialty, Patient *patient);
 
 /*  Agrega una especialidad a el diccionario de turnos urgentes y regulares.
-*   Pre: la estructura HashTurns fué creada.
+*   Pre: la estructura TurnsRegister fué creada.
 */
-bool hash_turns_add_specialty(HashTurns *turns, char *specialty);
+bool turns_register_add_specialty(TurnsRegister *turns, char *specialty);
 
 /*  Atiende al siguiente paciente en espera.
-*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el
+*   Pre: la estructura TurnsRegister fué creada, la especialidad existe, y el
 *       doctor está especializado en ella.
 *   Pos: datos del paciente desencolado.
 */
-Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty);
+Patient *turns_register_attend_patient(TurnsRegister *turns, Doctor *doctor, char *specialty);
 
 /*  Informa si existe una determinada especialidad.
-*   Pre: la estructura HashTurns fué creada, la especialidad existe, y el doctor
+*   Pre: la estructura TurnsRegister fué creada, la especialidad existe, y el doctor
 *       está especializado en ella.
 *   Pos: true si existe, false si no.
 */
-bool hash_turns_specialty_exists(HashTurns *turns, char *specialty);
+bool turns_register_specialty_exists(TurnsRegister *turns, char *specialty);
 
 /*  Informa la cantidad de pacientes en espera de una especialidad.
-*   Pre: la estructura HashTurns fué creada.
+*   Pre: la estructura TurnsRegister fué creada.
 */
-size_t hash_turns_specialty_count(HashTurns *turns, char *specialty);
+size_t turns_register_specialty_count(TurnsRegister *turns, char *specialty);
 
 /*  Destruye la estructura */
-void hash_turns_destroy(HashTurns *turns);
+void turns_register_destroy(TurnsRegister *turns);
 ```
 
 ## [Heap de Pacientes](src/our_tda/turns/heap_patients.c)
@@ -477,14 +486,14 @@ Rango *rango_create(const char *min, const char *max);
 /*  Devuelve la cota inferior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite inferior de la búsqueda, si es vacío,
-*       se guarda "`" como máximo caracter (uno más grande que la "z" en ASCII).
+*       se guarda "A" como mínimo caracter.
 */
 char *rango_min(const Rango *rango);
 
 /*  Devuelve la cota superior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite superior de la búsqueda, si es vacío,
-*       se guarda "{" como máximo caracter (uno más grande que la "z" en ASCII).
+*       se guarda "z" como máximo caracter.
 */
 char *rango_max(const Rango *rango);
 
@@ -530,9 +539,9 @@ Librería que incluye las funciones que cargan los datos de los archivos CSV en 
 *   Crea el esqueleto del diccionario de turnos urgentes y regulares utilizando
 *   las especialidades que se encuentran en los datos de los doctores.
 *   Pre: se creó la estructura doctor_csv_lines.
-*   Pos: estructura del tipo HashTurns sin datos relevantes.
+*   Pos: estructura del tipo TurnsRegister sin datos relevantes.
 */
-HashTurns *load_hash_turns(lista_t *doctor_csv_lines);
+TurnsRegister *load_turns_register(lista_t *doctor_csv_lines);
 
 /*  
 *   Con los datos de los pacientes, crea estructuras para almacenarlos, y
@@ -574,7 +583,7 @@ Librería que incluye a las funciones que se relacionan con la ejecución de los
 *       Como almacenamos a ambas "colas de espera" en un hash, entonces
 *   acceder a ellas es constante, entonces no perjudica a la complejidad pedida.
 */
-void make_appointment(HashTurns *turns, HashPatients *patients, char **parameters);
+void make_appointment(TurnsRegister *turns, HashPatients *patients, char **parameters);
 
 /*
 *   Se recibe el nombre de le doctore que quedó libre, y este atiende al 
@@ -593,7 +602,7 @@ void make_appointment(HashTurns *turns, HashPatients *patients, char **parameter
 *   cuesta O(log r) siendo r la cantidad de pacientes regulares, ya que los
 *   turnos regulares los almacenamos en un heap, y desencolar cuesta eso.
 */
-void attend_patient(HashTurns *turns, BSTDoctors *doctors, char **parameters);
+void attend_patient(TurnsRegister *turns, BSTDoctors *doctors, char **parameters);
 
 /*   
 *   El sistema imprime la lista de doctores en orden alfabético, junto con su 
