@@ -245,7 +245,7 @@ static void analizar_paternidad(abb_t *abb, abb_nodo_t *anterior, abb_nodo_t *ac
         destruir_nodo(actual, NULL);
     }
 
-    else if (actual->izq == NULL ||  actual->der == NULL)
+    else if (actual->izq == NULL || actual->der == NULL)
     {
         borrar_con_un_hijo(abb, anterior, actual, relacion_act_ant, actual->izq != NULL ? HIJO_IZQ : HIJO_DER, es_raiz);
         destruir_nodo(actual, NULL);
@@ -369,6 +369,40 @@ void abb_destruir(abb_t *abb)
 {
     _abb_destruir(abb->raiz, abb->destruir_dato);
     free(abb);
+}
+
+static void _abb_in_rango(abb_nodo_t *actual, bool visitar(const char *, void *, void *), char *extra, char *min, char *max, bool *continuar, abb_comparar_clave_t cmp)
+{
+    if (actual == NULL || !(*continuar))
+    {
+        return;
+    }
+
+    int min_cmp = cmp(actual->clave, min);
+    int max_cmp = cmp(actual->clave, max);
+
+    if (min_cmp > 0)
+    {
+        _abb_in_rango(actual->izq, visitar, extra, min, max, continuar, cmp);
+    }
+    if (*continuar && min_cmp >= 0 && max_cmp <= 0)
+    {
+        *continuar &= visitar(actual->clave, actual->dato, extra);
+    }
+    if (max_cmp < 0)
+    {
+        _abb_in_rango(actual->der, visitar, extra, min, max, continuar, cmp);
+    }
+}
+
+void abb_in_rango(abb_t *abb, bool visitar(const char *, void *, void *), void *extra, char *min, char *max)
+{
+    if (abb == NULL)
+    {
+        return;
+    }
+    bool continuar = true;
+    _abb_in_rango(abb->raiz, visitar, extra, min, max, &continuar, abb->cmp);
 }
 
 static void _abb_in_order(abb_nodo_t *actual, bool visitar(const char *, void *, void *), void *extra, bool *continuar)

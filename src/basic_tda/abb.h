@@ -60,6 +60,17 @@ size_t abb_cantidad(abb_t *abb);
  */
 void abb_destruir(abb_t *abb);
 
+/* Implementa el iterador interno en rango, que recorre el arbol in-order.
+   "visitar" es una función de callback que recibe la clave, el valor y un
+   puntero extra, y devuelve true si se debe seguir iterando, false en caso
+   contrario), el rango se recibe como arreglo de arreglos (strv), el iterador
+   itera en el rango dado.
+ */
+void abb_in_rango(abb_t *abb,
+                  bool visitar(const char *, void *, void *),
+                  void *extra,
+                  char *min, char *max);
+
 /* Implementa el iterador interno, que recorre el arbol in-order.
    "visitar" es una función de callback que recibe la clave, el valor y un
    puntero extra, y devuelve true si se debe seguir iterando, false en caso

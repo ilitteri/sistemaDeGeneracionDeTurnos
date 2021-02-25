@@ -8,7 +8,7 @@
 /* Inclución de estructuras */
 #include "../our_tda/doctor/doctor.h"
 #include "../our_tda/patient/patient.h"
-#include "../our_tda/command/report.h"
+#include "../our_tda/command/range.h"
 #include "../our_tda/doctor/bst_doctors.h"
 #include "../our_tda/patient/hash_patients.h"
 #include "../our_tda/turns/hash_turns.h"
@@ -24,10 +24,10 @@ static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *
 static void cmd2_print_result(char *patient_name, char *specialty, size_t n);
 static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctors, Patient **patient);
 /* Funciones auxiliares para el comando 3 */
-static bool visit_doctors_in_range(const char *clave, void *dato, void *extra);
-static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max);
-static void print_report(BSTDoctors *doctors, const char *min, const char *max);
-static void pre_doctor_countint(BSTDoctors *doctors, const char *min, const char *max);
+static bool visit_doctors_in_range(const char *key, void *data, void *extra);
+static bool visit_count_doctors(const char *key, void *data, void *extra);
+static void execute_cmd3(BSTDoctors *doctors, char **parameters);
+static bool pre_doctor_count(BSTDoctors *doctors, char **parameters);
 
 static bool parameters_error_handler(char **parameters, char *cmd, size_t param_limit);
 
@@ -67,7 +67,14 @@ void generate_report(BSTDoctors *doctors, char **parameters)
         return;
     } // O(param)
 
-    execute_cmd3(doctors, parameters[0], parameters[1]); // O(log d) promedio, O(d) si el rango corresponde a la totalidad de doctores.
+    size_t doctors_count = bst_doctors_count(doctors);
+    if (doctors_count == 0)
+    {
+        printf(DOCTOR_COUNT, doctors_count);
+        return;
+    }
+
+    execute_cmd3(doctors, parameters); // O(log d) promedio, O(d) si el rango corresponde a la totalidad de doctores.
 }
 
 static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients *patients)
@@ -161,62 +168,41 @@ static bool parameters_error_handler(char **parameters, char *cmd, size_t param_
     return true;
 } // O(param)
 
-static bool visit_doctors_in_range(const char *clave, void *dato, void *extra)
+static bool visit_doctors_in_range(const char *key, void *data, void *extra)
 {
-    Report *report = extra;
-    if (strcmp(clave, report_max(report)) > 0)
-    {
-        return false;
-    }
-    else if (strcmp(clave, report_min(report)) >= 0)
-    {
-        Doctor *doctor = dato;
-        printf(DOCTOR_REPORT, report_get_count(report)+1, doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
-        report_count_increment(report);
-    }
+    Range *range = extra;
+    Doctor *doctor = data;
+    printf(DOCTOR_REPORT, range_get_count(range)+1, doctor_name(doctor), doctor_specialty(doctor), doctor_attended_patients(doctor));
+    range_count_increment(range);
     return true;
 }
-static bool visit_count_doctors(const char *clave, void *dato, void *extra)
+static bool visit_count_doctors(const char *key, void *data, void *extra)
 {
-    Report *report = extra;
-    if (strcmp(clave, report_max(report)) > 0)
-    {
-        return false;
-    }
-    else if (strcmp(clave, report_min(report)) >= 0)
-    {
-        report_count_increment(report);
-    }
+    Range *range = extra;
+    range_count_increment(range);
     return true;
 }
 
-static void pre_doctor_countint(BSTDoctors *doctors, const char *min, const char *max)
+static bool pre_doctor_count(BSTDoctors *doctors, char **parameters)
 {
-    Report *doctor_counter_report;
-    if ((doctor_counter_report = report_create(min, max)) == NULL)
+    Range *range = range_create(parameters[0], parameters[1]);
+    bst_doctors_in_range(doctors, visit_count_doctors, range);
+    printf(DOCTOR_COUNT, range_get_count(range));
+    if (range_get_count(range) == 0)
     {
-        printf(ERROR_MEM, "doctor_counter_report");
-        return;
+        range_destroy(range);
+        return false;
     }
-    bst_doctors_in_order(doctors, visit_count_doctors, doctor_counter_report);
-    printf(DOCTOR_COUNT, report_get_count(doctor_counter_report));
-    report_destroy(doctor_counter_report);
+    range_destroy(range);
+    return true;
 }
 
-static void print_report(BSTDoctors *doctors, const char *min, const char *max)
+static void execute_cmd3(BSTDoctors *doctors, char **parameters)
 {
-    Report *doctor_print_report;
-    if ((doctor_print_report = report_create(min, max)) == NULL)
+    if (pre_doctor_count(doctors, parameters))
     {
-        printf(ERROR_MEM, "doctor_print_report");
-        return;
+        Range *range = range_create(parameters[0], parameters[1]);
+        bst_doctors_in_range(doctors, visit_doctors_in_range, range);
+        range_destroy(range);
     }
-    bst_doctors_in_order(doctors, visit_doctors_in_range, doctor_print_report);
-    report_destroy(doctor_print_report);
-}
-
-static void execute_cmd3(BSTDoctors *doctors, const char *min, const char *max)
-{
-    pre_doctor_countint(doctors, min, max); // O(log d)
-    print_report(doctors, min, max); // O(log d)
 }

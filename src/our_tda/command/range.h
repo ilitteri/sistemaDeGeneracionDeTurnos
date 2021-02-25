@@ -1,38 +1,38 @@
-#ifndef REPORT_H
-#define REPORT_H
+#ifndef RANGE_H
+#define RANGE_H
 
 #include <stdlib.h>
 
-typedef struct Report Report;
+typedef struct Range Range;
 
 /* Crea la estructura */
-Report *report_create(const char *min, const char *max);
+Range *range_create(const char *min, const char *max);
 
 /*  Devuelve la cota inferior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite inferior de la búsqueda, si es vacío,
-*       se guarda "`" como máximo caracter (uno más grande que la "z" en ASCII).
+*       se guarda "A" como mínimo caracter.
 */
-char *report_min(const Report *report);
+char *range_min(const Range *range);
 
 /*  Devuelve la cota superior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite superior de la búsqueda, si es vacío,
-*       se guarda "{" como máximo caracter (uno más grande que la "z" en ASCII).
+*       se guarda "z" como máximo caracter.
 */
-char *report_max(const Report *report);
+char *range_max(const Range *range);
 
 /*  Informa la cantidad de doctores incluídos en el informe 
 *   Pre: la estructura fué creada.
 */
-size_t report_get_count(const Report *report);
+size_t range_get_count(const Range *range);
 
 /*  Incrementa en uno el contador interno de la estructura.
 *   Pre: la estructura fué creada.
 */
-void report_count_increment(Report *report);
+void range_count_increment(Range *range);
 
 /* Destruye la estructura */
-void report_destroy(Report *report);
+void range_destroy(Range *range);
 
 #endif

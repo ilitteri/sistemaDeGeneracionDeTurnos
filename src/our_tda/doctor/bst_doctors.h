@@ -5,7 +5,7 @@
 
 #include "../../basic_tda/abb.h"
 #include "doctor.h"
-#include "../command/report.h"
+#include "../command/range.h"
 
 /* Tipos de función para comparar claves y destruir datos. */
 typedef abb_comparar_clave_t bst_key_cmp;
@@ -42,13 +42,14 @@ void bst_doctors_destroy(BSTDoctors *doctors);
 
 /* ITERADOR INTERNO */
 
-/* Implementa el iterador interno, que recorre el arbol in-order.
+/* Implementa el iterador interno en rango, que recorre el arbol in-order.
    "visitar" es una función de callback que recibe la clave, el valor y un
    puntero extra, y devuelve true si se debe seguir iterando, false en caso
-   contrario).
+   contrario), el rango se recibe como arreglo de arreglos (strv), el iterador
+   itera en el rango dado.
  */
-void bst_doctors_in_order(BSTDoctors *doctors,
-                  bool visit(const char *, void *, void *),
-                  Report *report);
+void bst_doctors_in_range(BSTDoctors *doctors,
+                          bool visit(const char *, void *, void *),
+                          Range *range);
 
 #endif

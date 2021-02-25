@@ -3,7 +3,7 @@
 #include "bst_doctors.h"
 #include "../../basic_tda/abb.h"
 #include "doctor.h"
-#include "../command/report.h"
+#include "../command/range.h"
 
 BSTDoctors *bst_doctors_create(bst_key_cmp cmp, bst_doctor_destroy destroy_data)
 {
@@ -37,7 +37,9 @@ void bst_doctors_destroy(BSTDoctors *doctors)
     abb_destruir(doctors);
 }
 
-void bst_doctors_in_order(BSTDoctors *doctors, bool visit(const char *, void *, void *), Report *report)
+void bst_doctors_in_range(BSTDoctors *doctors, 
+                        bool visit(const char *, void *, void *), 
+                        Range *range)
 {
-    abb_in_order(doctors, visit, (void *)report);
+    abb_in_rango(doctors, visit, range, range_min(range), range_max(range));
 }
