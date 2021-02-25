@@ -50,3 +50,14 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# CSV
+*.csv
+
+#.zip
+*.zip
+
+# Folders
+build
+pruebas_zyxcba
+.vscode
