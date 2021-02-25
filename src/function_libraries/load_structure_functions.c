@@ -18,11 +18,21 @@
 #include "../our_tda/turns/hash_turns.h"
 #include "../our_tda/doctor/bst_doctors.h"
 
+void _queue_patients_destroy(void *queue)
+{
+    queue_patients_destroy((QueuePatients *)queue, NULL);
+}
+
+void _heap_patients_destroy(void *heap)
+{
+    heap_patients_destroy((HeapPatients *)heap, NULL);
+}
+
 HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
 {
     HashTurns *turns;
 
-    if ((turns  = hash_turns_create()) == NULL)
+    if ((turns  = hash_turns_create(_queue_patients_destroy, _heap_patients_destroy)) == NULL)
     {
         return NULL;
     }

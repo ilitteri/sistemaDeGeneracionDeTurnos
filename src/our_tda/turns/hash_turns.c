@@ -28,17 +28,8 @@ void _destroy_patient(void *patient)
     destroy_patient((Patient *)patient);
 }
 
-void _queue_patients_destroy(void *queue)
-{
-    queue_patients_destroy((QueuePatients *)queue, NULL);
-}
-
-void _heap_patients_destroy(void *heap)
-{
-    heap_patients_destroy((HeapPatients *)heap, NULL);
-}
-
-HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
+HashTurns *hash_turns_create(hash_turns_destroy_data destroy_queue_patients, 
+                            hash_turns_destroy_data destroy_heap_patients)
 {
     HashTurns *turns;
 
@@ -47,13 +38,13 @@ HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
         return NULL;
     }
 
-    if ((turns->urgent = hash_crear(_queue_patients_destroy)) == NULL)
+    if ((turns->urgent = hash_crear(destroy_queue_patients)) == NULL)
     {
         free(turns);
         return NULL;
     }
 
-    if ((turns->regular = hash_crear(_heap_patients_destroy)) == NULL)
+    if ((turns->regular = hash_crear(destroy_heap_patients)) == NULL)
     {
         free(turns->urgent);
         free(turns);

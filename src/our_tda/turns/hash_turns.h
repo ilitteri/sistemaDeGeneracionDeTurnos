@@ -21,7 +21,8 @@ typedef hash_destruir_dato_t hash_turns_destroy_data;
 /* Primitivas de la estructura */
 
 /* Crea la estructura */
-HashTurns *hash_turns_create();
+HashTurns *hash_turns_create(hash_turns_destroy_data destroy_queue_patients, 
+                            hash_turns_destroy_data destroy_heap_patients);
 
 /*  Agrega un paciente a la cola de espera (dependiendo de la urgencia, va a
 *   una u otra).
