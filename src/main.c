@@ -61,9 +61,9 @@ int main(int argc, char **argv)
 	fclose(patients_file);
 	BSTDoctors *doctors_register = register_doctors(doctors_data, patients_data);
 	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
-	destroy_structure(doctors_data);
+	csv_destroy(doctors_data);
 	HashPatients *patients_register = register_patients(doctors_register, patients_data);
-	destroy_structure(patients_data);
+	csv_destroy(patients_data);
 
 	process_stdin(turns, patients_register, doctors_register);
 
@@ -174,9 +174,9 @@ static int handle_file_error(int errnum, char *path)
 static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data)
 {
 	lista_t *patients_data;
-	if ((patients_data = csv_create_structure(patients_file)) == NULL)
+	if ((patients_data = csv_create(patients_file)) == NULL)
 	{
-		destroy_structure(doctors_data);
+		csv_destroy(doctors_data);
 		printf(ERROR_MEM, "patients_data");
 		exit(EXIT_FAILURE);
 	}
@@ -186,7 +186,7 @@ static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data
 static lista_t *process_doctors_data(FILE *doctors_file)
 {
 	lista_t *doctors_data;
-	if ((doctors_data = csv_create_structure(doctors_file)) == NULL)
+	if ((doctors_data = csv_create(doctors_file)) == NULL)
 	{
 		printf(ERROR_MEM, "doctors_data");
 		exit(EXIT_FAILURE);
@@ -199,8 +199,8 @@ static HashTurns * init_hash_turns(lista_t *doctors_data, lista_t *patients_data
 	HashTurns *turns;
 	if ((turns = load_hash_turns(doctors_data)) == NULL)
 	{
-		destroy_structure(patients_data);
-		destroy_structure(doctors_data);
+		csv_destroy(patients_data);
+		csv_destroy(doctors_data);
 		printf(ERROR_MEM, "turns");
 		exit(EXIT_FAILURE);
 	}
@@ -212,8 +212,8 @@ static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_dat
 	BSTDoctors *doctors_register;
 	if ((doctors_register = load_doctors(doctors_data)) == NULL)
 	{
-		destroy_structure(doctors_data);
-		destroy_structure(patients_data);
+		csv_destroy(doctors_data);
+		csv_destroy(patients_data);
 		printf(ERROR_MEM, "doctors_register");
 		exit(EXIT_FAILURE);
 	}
@@ -226,7 +226,7 @@ static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *pa
 	if ((patients_register = load_patients(patients_data)) == NULL)
 	{
 		bst_doctors_destroy(doctors_register);
-		destroy_structure(patients_data);
+		csv_destroy(patients_data);
 		printf(ERROR_MEM, "patients_register");
 		exit(EXIT_FAILURE);
 	}

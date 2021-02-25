@@ -8,35 +8,45 @@
 
 #define SEPARATION ','
 
-static void remove_new_line(char* line) {
+static void remove_new_line(char *line);
+static void _free_strv(void *strv);
+
+static void remove_new_line(char *line)
+{
 	size_t len = strlen(line);
-	if (line[len - 1] == '\n') {
+	if (line[len - 1] == '\n')
+	{
 		line[len - 1] = '\0';
 	}
 }
 
-void _free_strv(void* strv) {
-    free_strv((char**) strv);
+static void _free_strv(void *strv)
+{
+	free_strv((char **)strv);
 }
 
-lista_t* csv_create_structure(FILE* file) {
-	lista_t* list = lista_crear();
-	if (!list) {
+lista_t *csv_create(FILE *file)
+{
+	lista_t *list = lista_crear();
+	if (!list)
+	{
 		fclose(file);
 		return NULL;
 	}
 
-	char* line = NULL;
+	char *line = NULL;
 	size_t c = 0;
-	while (getline(&line, &c, file) > 0) {
+	while (getline(&line, &c, file) > 0)
+	{
 		remove_new_line(line);
-		char** values = split(line, SEPARATION);
+		char **values = split(line, SEPARATION);
 		lista_insertar_ultimo(list, values);
 	}
 	free(line);
 	return list;
 }
 
-void destroy_structure(lista_t* list) {
+void csv_destroy(lista_t *list)
+{
 	lista_destruir(list, _free_strv);
 }
