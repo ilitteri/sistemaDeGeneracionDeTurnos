@@ -1,7 +1,7 @@
 #ifndef COMMAND_FUNCTIONS
 #define COMMAND_FUNCTIONS
 
-#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/turns/turns_register.h"
 #include "../our_tda/patient/hash_patients.h"
 #include "../our_tda/doctor/bst_doctors.h"
 
@@ -9,7 +9,7 @@
 *   Se recibe un nombre de paciente y el nombre de una especialidad, y el 
 *   sistema le añade a la lista de espera de la especialidad correspondiente.
 */
-void make_appointment(HashTurns *turns, HashPatients *patients, char **parameters);
+void make_appointment(TurnsRegister *turns, HashPatients *patients, char **parameters);
 
 /*
 *   Se recibe el nombre de le doctore que quedó libre, y este atiende al 
@@ -17,7 +17,7 @@ void make_appointment(HashTurns *turns, HashPatients *patients, char **parameter
 *   paciente urgente, atiende al siguiente paciente con mayor antigüedad como 
 *   paciente en la clínica.
 */
-void attend_patient(HashTurns *turns, BSTDoctors *doctors, char **parameters);
+void attend_patient(TurnsRegister *turns, BSTDoctors *doctors, char **parameters);
 
 /*   
 *   El sistema imprime la lista de doctores en orden alfabético, junto con su 

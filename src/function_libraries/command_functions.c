@@ -11,15 +11,15 @@
 #include "../our_tda/command/range.h"
 #include "../our_tda/doctor/bst_doctors.h"
 #include "../our_tda/patient/hash_patients.h"
-#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/turns/turns_register.h"
 
 /* Firma de funciones auxiliares */
-static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients *patients);
+static bool cmd1_error_handler(char** parameters, TurnsRegister *turns, HashPatients *patients);
 static void cmd1_print_result(char *patient_name, char *specialty, size_t n);
 /* Funciones auxiliares para el comando 2 */
-static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *doctors);
+static bool cmd2_error_handler(char** parameters, TurnsRegister *turns, BSTDoctors *doctors);
 static void cmd2_print_result(char *patient_name, char *specialty, size_t n);
-static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctors, Patient **patient);
+static bool _attend_patient(char** parameters, TurnsRegister *turns, Doctor *doctors, Patient **patient);
 /* Funciones auxiliares para el comando 3 */
 static bool visit_doctors_in_range(const char *key, void *data, void *extra);
 static bool visit_count_doctors(const char *key, void *data, void *extra);
@@ -27,18 +27,18 @@ static bool pre_walk_doctor_count(BSTDoctors *doctors, char **parameters);
 /* Función auxiliar para el manejo de errores */
 static bool parameters_error_handler(char **parameters, char *cmd, size_t param_limit);
 
-void make_appointment(HashTurns *turns, HashPatients *patients, char** parameters)
+void make_appointment(TurnsRegister *turns, HashPatients *patients, char** parameters)
 {
     if (!cmd1_error_handler(parameters, turns, patients) || 
-        !hash_turns_add_turn(turns, parameters[2], parameters[1], hash_patients_get(patients, parameters[0])))
+        !turns_register_add_turn(turns, parameters[2], parameters[1], hash_patients_get(patients, parameters[0])))
     {
         return;
     } // O(p + p[2]) + (urgente ? O(1) : O(log n))
 
-    cmd1_print_result(parameters[0], parameters[1], hash_turns_specialty_count(turns, parameters[1])-1); // O(1).
+    cmd1_print_result(parameters[0], parameters[1], turns_register_specialty_count(turns, parameters[1])-1); // O(1).
 } // (urgentes ? O(1) : O(log n)).
 
-void attend_patient(HashTurns *turns, BSTDoctors *doctors, char** parameters)
+void attend_patient(TurnsRegister *turns, BSTDoctors *doctors, char** parameters)
 {
     if (!cmd2_error_handler(parameters, turns, doctors))
     {
@@ -54,7 +54,7 @@ void attend_patient(HashTurns *turns, BSTDoctors *doctors, char** parameters)
 
     char *specialty = doctor_specialty(doctor);
 
-    cmd2_print_result(patient_name(patient), specialty, hash_turns_specialty_count(turns, specialty)); // O(1).
+    cmd2_print_result(patient_name(patient), specialty, turns_register_specialty_count(turns, specialty)); // O(1).
 } // O(log d) urgentes, O(log d + log r) regulares.
 
 void generate_report(BSTDoctors *doctors, char **parameters)
@@ -80,7 +80,7 @@ void generate_report(BSTDoctors *doctors, char **parameters)
     }
 }
 
-static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients *patients)
+static bool cmd1_error_handler(char** parameters, TurnsRegister *turns, HashPatients *patients)
 {
     bool ok = true;
 
@@ -94,7 +94,7 @@ static bool cmd1_error_handler(char** parameters, HashTurns *turns, HashPatients
         printf(ERROR_PATIENT, parameters[0]);
         ok = false;
     } // O(1).
-    if (!hash_turns_specialty_exists(turns, parameters[1]))
+    if (!turns_register_specialty_exists(turns, parameters[1]))
     {
         printf(ERROR_SPECIALTY, parameters[1]);
         ok = false;
@@ -114,7 +114,7 @@ static void cmd1_print_result(char *patient_name, char *specialty, size_t n)
     printf(ENQUEUED_PATIENT_COUNT, n+1, specialty);
 } // O(1).
 
-static bool cmd2_error_handler(char** parameters, HashTurns *turns, BSTDoctors *doctors)
+static bool cmd2_error_handler(char** parameters, TurnsRegister *turns, BSTDoctors *doctors)
 {
     bool ok = true;
 
@@ -139,9 +139,9 @@ static void cmd2_print_result(char *name, char *specialty, size_t n)
     printf(ENQUEUED_PATIENT_COUNT, n, specialty);
 } // O(1)
 
-static bool _attend_patient(char** parameters, HashTurns *turns, Doctor *doctor, Patient **patient)
+static bool _attend_patient(char** parameters, TurnsRegister *turns, Doctor *doctor, Patient **patient)
 {
-    *patient = hash_turns_attend_patient(turns, doctor, doctor_specialty(doctor)); // O(1) si desencola de urgentes, O(log d) si desencola de regulares.
+    *patient = turns_register_attend_patient(turns, doctor, doctor_specialty(doctor)); // O(1) si desencola de urgentes, O(log d) si desencola de regulares.
 
     if (*patient == NULL)
     {

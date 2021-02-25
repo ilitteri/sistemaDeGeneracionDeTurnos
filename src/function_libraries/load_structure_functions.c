@@ -15,7 +15,7 @@
 #include "../our_tda/patient/hash_patients.h"
 #include "../our_tda/turns/heap_patients.h"
 #include "../our_tda/turns/queue_patients.h"
-#include "../our_tda/turns/hash_turns.h"
+#include "../our_tda/turns/turns_register.h"
 #include "../our_tda/doctor/bst_doctors.h"
 
 void _queue_patients_destroy(void *queue)
@@ -28,11 +28,11 @@ void _heap_patients_destroy(void *heap)
     heap_patients_destroy((HeapPatients *)heap, NULL);
 }
 
-HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
+TurnsRegister *load_turns_register(lista_t *doctor_csv_lines)
 {
-    HashTurns *turns;
+    TurnsRegister *turns;
 
-    if ((turns  = hash_turns_create(_queue_patients_destroy, _heap_patients_destroy)) == NULL)
+    if ((turns  = turns_register_create(_queue_patients_destroy, _heap_patients_destroy)) == NULL)
     {
         return NULL;
     }
@@ -41,7 +41,7 @@ HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
 
     if ((doctor_list_iter = lista_iter_crear(doctor_csv_lines)) == NULL)
     {
-        hash_turns_destroy(turns);
+        turns_register_destroy(turns);
         return NULL;
     }
 
@@ -49,10 +49,10 @@ HashTurns *load_hash_turns(lista_t *doctor_csv_lines)
     {
         char **doctor_data = (char **)lista_iter_ver_actual(doctor_list_iter);
 
-        if (hash_turns_add_specialty(turns, doctor_data[1]) == false)
+        if (turns_register_add_specialty(turns, doctor_data[1]) == false)
         {
             lista_iter_destruir(doctor_list_iter);
-            hash_turns_destroy(turns);
+            turns_register_destroy(turns);
             return NULL;
         }
 

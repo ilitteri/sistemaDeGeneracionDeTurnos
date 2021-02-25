@@ -9,7 +9,7 @@
 #include "basic_tda/lista.h"
 #include "our_tda/doctor/bst_doctors.h"
 #include "our_tda/patient/hash_patients.h"
-#include "our_tda/turns/hash_turns.h"
+#include "our_tda/turns/turns_register.h"
 #include "csv.h"
 /* Inclución de librerías de funciones propias */
 #include "function_libraries/strutil.h"
@@ -33,12 +33,12 @@ static lista_t *process_doctors_data(FILE *doctors_dile);
 static lista_t *process_patients_data(FILE *patients_file, lista_t *doctors_data);
 static BSTDoctors *register_doctors(lista_t *doctors_data, lista_t *patients_data);
 static HashPatients *register_patients(BSTDoctors *doctors_register, lista_t *patients_data);
-static HashTurns *init_hash_turns(lista_t *doctors_data, lista_t *patients_data);
+static TurnsRegister *init_turns_register(lista_t *doctors_data, lista_t *patients_data);
 /* Funciones relacionadas con la fase de comandos */
 static bool process_command(char *cmd, char **parameters,
-							HashTurns *turns, HashPatients *patients, BSTDoctors *doctors);
+							TurnsRegister *turns, HashPatients *patients, BSTDoctors *doctors);
 static void remove_new_line(char *line);
-static void process_stdin(HashTurns *turns, HashPatients *patients, BSTDoctors *doctors);
+static void process_stdin(TurnsRegister *turns, HashPatients *patients, BSTDoctors *doctors);
 
 int main(int argc, char **argv)
 {
@@ -60,14 +60,14 @@ int main(int argc, char **argv)
 	fclose(doctors_file);
 	fclose(patients_file);
 	BSTDoctors *doctors_register = register_doctors(doctors_data, patients_data);
-	HashTurns *turns = init_hash_turns(doctors_data, patients_data);
+	TurnsRegister *turns = init_turns_register(doctors_data, patients_data);
 	csv_destroy(doctors_data);
 	HashPatients *patients_register = register_patients(doctors_register, patients_data);
 	csv_destroy(patients_data);
 
 	process_stdin(turns, patients_register, doctors_register);
 
-	hash_turns_destroy(turns);
+	turns_register_destroy(turns);
 	bst_doctors_destroy(doctors_register);
 	hash_patients_destroy(patients_register);
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 }
 
 static bool process_command(char *cmd, char **parameters,
-							HashTurns *turns, HashPatients *patients, BSTDoctors *doctors)
+							TurnsRegister *turns, HashPatients *patients, BSTDoctors *doctors)
 {
 
 	if (strcmp(cmd, CMD_PEDIR_TURNO) == 0)
@@ -133,7 +133,7 @@ static bool handle_format_error(char **values, char *line)
 	return true;
 }
 
-void process_stdin(HashTurns *turns, HashPatients *patients, BSTDoctors *doctors)
+void process_stdin(TurnsRegister *turns, HashPatients *patients, BSTDoctors *doctors)
 {
 	char *line = NULL;
 	size_t c = 0;
@@ -194,10 +194,10 @@ static lista_t *process_doctors_data(FILE *doctors_file)
 	return doctors_data;
 }
 
-static HashTurns * init_hash_turns(lista_t *doctors_data, lista_t *patients_data)
+static TurnsRegister * init_turns_register(lista_t *doctors_data, lista_t *patients_data)
 {
-	HashTurns *turns;
-	if ((turns = load_hash_turns(doctors_data)) == NULL)
+	TurnsRegister *turns;
+	if ((turns = load_turns_register(doctors_data)) == NULL)
 	{
 		csv_destroy(patients_data);
 		csv_destroy(doctors_data);

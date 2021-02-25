@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../../basic_tda/hash.h"
-#include "hash_turns.h"
+#include "turns_register.h"
 #include "queue_patients.h"
 #include "heap_patients.h"
 #include "../doctor/doctor.h"
@@ -12,7 +12,7 @@
 #define URGENT "URGENTE"
 #define REGULAR "REGULAR"
 
-struct Hash
+struct Register
 {
     hash_t *urgent;
     hash_t *regular;
@@ -28,12 +28,12 @@ void _destroy_patient(void *patient)
     destroy_patient((Patient *)patient);
 }
 
-HashTurns *hash_turns_create(hash_turns_destroy_data destroy_queue_patients, 
-                            hash_turns_destroy_data destroy_heap_patients)
+TurnsRegister *turns_register_create(turns_register_destroy_data destroy_queue_patients, 
+                            turns_register_destroy_data destroy_heap_patients)
 {
-    HashTurns *turns;
+    TurnsRegister *turns;
 
-    if ((turns = malloc(sizeof(HashTurns))) == NULL)
+    if ((turns = malloc(sizeof(TurnsRegister))) == NULL)
     {
         return NULL;
     }
@@ -64,7 +64,7 @@ static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
     return heap_patients_enqueue((HeapPatients *)hash_obtener(regular, specialty), patient);
 }
 
-bool hash_turns_add_turn(HashTurns *turns, char* urgency, char *specialty, Patient *patient)
+bool turns_register_add_turn(TurnsRegister *turns, char* urgency, char *specialty, Patient *patient)
 {
     if (strcmp(urgency, URGENT) == 0)
     {
@@ -126,7 +126,7 @@ static bool add_regular_specialty(hash_t *regular, char* specialty)
     return true;
 }
 
-bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
+bool turns_register_add_specialty(TurnsRegister *turns, char *specialty)
 {
     bool ok = true;
     ok &= add_regular_specialty(turns->regular, specialty);
@@ -142,7 +142,7 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
     return true;
 }
 
-Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *specialty)
+Patient *turns_register_attend_patient(TurnsRegister *turns, Doctor *doctor, char *specialty)
 {
     if (queue_patients_count(hash_obtener(turns->urgent, specialty)))
     {
@@ -159,18 +159,18 @@ Patient *hash_turns_attend_patient(HashTurns *turns, Doctor *doctor, char *speci
     return NULL;
 }
 
-bool hash_turns_specialty_exists(HashTurns *turns, char *specialty)
+bool turns_register_specialty_exists(TurnsRegister *turns, char *specialty)
 {
     return hash_pertenece(turns->urgent, specialty);
 }
 
-size_t hash_turns_specialty_count(HashTurns *turns, char *specialty)
+size_t turns_register_specialty_count(TurnsRegister *turns, char *specialty)
 {
     return queue_patients_count(hash_obtener(turns->urgent, specialty)) +
             heap_patients_count(hash_obtener(turns->regular, specialty));
 }
 
-void hash_turns_destroy(HashTurns *turns)
+void turns_register_destroy(TurnsRegister *turns)
 {
     hash_destruir(turns->urgent);
     hash_destruir(turns->regular);
