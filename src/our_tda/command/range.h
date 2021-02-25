@@ -3,7 +3,11 @@
 
 #include <stdlib.h>
 
+/* Declaración del struct de la estructura*/
+
 typedef struct Range Range;
+
+/* Primitivas de la estructura */
 
 /* Crea la estructura */
 Range *range_create(const char *min, const char *max);

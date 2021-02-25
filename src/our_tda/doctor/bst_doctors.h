@@ -7,7 +7,8 @@
 #include "doctor.h"
 #include "../command/range.h"
 
-/* Tipos de función para comparar claves y destruir datos. */
+/* Funciones de la estructura */
+
 typedef abb_comparar_clave_t bst_key_cmp;
 typedef abb_destruir_dato_t bst_doctor_destroy;
 

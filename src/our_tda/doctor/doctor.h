@@ -3,10 +3,11 @@
 
 #include <stdlib.h>
 
-/* Struct */
+/* Declaración del struct de la estructura*/
+
 typedef struct Doctor Doctor;
 
-/* Primitivas de Doctor */
+/* Primitivas de la estructura */
 
 /* Registra un doctor, 
 *  recibe el nombre 

@@ -7,7 +7,7 @@
 #include "../../basic_tda/heap.h"
 #include "../patient/patient.h"
 
-/* Struct */
+/* Declaración del struct de la estructura*/
 
 typedef heap_t HeapPatients;
 

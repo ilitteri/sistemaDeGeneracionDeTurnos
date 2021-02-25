@@ -10,9 +10,11 @@
 #include "heap_patients.h"
 #include "../doctor/doctor.h"
 
-/* Struct */
+/* Declaración del struct de la estructura*/
 
 typedef struct Hash HashTurns;
+
+/* Funciones de la estructura */
 
 typedef hash_destruir_dato_t hash_turns_destroy_data;
 

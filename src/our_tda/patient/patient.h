@@ -3,7 +3,11 @@
 
 #include <stdlib.h>
 
+/* Declaración del struct de la estructura*/
+
 typedef struct Patient Patient;
+
+/* Primitivas de la estructura */
 
 /* Registra un paciente */
 Patient *patient_check_in(char *name, size_t year);

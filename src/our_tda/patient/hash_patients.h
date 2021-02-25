@@ -7,8 +7,15 @@
 #include "../../basic_tda/hash.h"
 #include "patient.h"
 
+/* Declaración del struct de la estructura*/
+
 typedef hash_t HashPatients;
+
+/* Funciones de la estructura */
+
 typedef hash_destruir_dato_t hash_destroy_patient;
+
+/* Primitivas de la estructura */
 
 /* Crea la estructura */
 HashPatients *hash_patients_create(hash_destroy_patient patient_destroy);

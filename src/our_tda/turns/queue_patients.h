@@ -5,11 +5,11 @@
 
 #include "../patient/patient.h"
 
-/* Struct */
+/* Declaración del struct de la estructura*/
 
 typedef struct Queue QueuePatients;
 
-/* Primitivas */
+/* Primitivas de la estructura*/
 
 /* Crea la estructura */
 QueuePatients *queue_patients_create();
