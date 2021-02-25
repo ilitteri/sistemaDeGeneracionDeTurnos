@@ -22,12 +22,12 @@
 | --- | --- | --- |
 | [Doctor](#Doctor)  | [Paciente](#Paciente)  | [Árbol de doctores](#Árbol-de-doctores)  |
 | [Hash de pacientes](#Hash-de-pacientes)  | [Cola de Pacientes](#Cola-de-Pacientes)  | [Heap de Pacientes](#Heap-de-Pacientes)  |
-| [Hash de turnos](#Hash-de-turnos)  | [Hash de turnos](#Hash-de-turnos)  | [Reporte](#Reporte)  |
+| [Hash de turnos](#Hash-de-turnos)  | [Hash de turnos](#Hash-de-turnos)  | [Rangoe](#Rangoe)  |
 
 |  | [Código del programa](#Código-del-programa) |  |
 | --- | --- | --- |
-| [main.c](#main) | [load_structure_functions.c](#load-structures) | [command_functions.c](#command-functions) |
-| [csv.c](#csv) | [error_messages.h](#error_messages) | [success_messages.h](#success_messages) |
+| [main.c](#main.c) | [load_structure_functions.c](#load_structure_functions.c) | [command_functions.c](#command_functions.c) |
+| [csv.c](#csv.c) | [error_messages.h](#error_messages.c) | [success_messages.h](#success_messages.c) |
 
 # Datos Personales del Grupo
 [*Indice*](#Tabla-de-Contenidos)
@@ -105,6 +105,12 @@ Manejo de errores y devolución de la fase la buena fase.
 
 ### Descripción
 
+Esta estructura es la encargada de almacenar los datos de los doctores, los cuales son extraídos del archivo CSV correspondiente más un dato correspondiente a la cantidad de pacientes que antedió, que va a variar con la ejecución de los comandos (en específico con el comando `"ATENDER_SIGUIENTE"`).
+
+Para su creación implementamos una primitiva que recibe como parámetros el nombre y la especialidad de un doctor (datos del CSV), para almacenar ésta información se pidió memoria exclusivamente en otro módulo, por lo tanto, como es responsabilidad del mismo liberar esa memoria, debimos realizar copias de estos datos para que la destrucción de esta estructura se responsabilice de sus datos sin interferir con los dependientes de otras estructuras.
+
+También implementamos primitivas para obtener sus datos sin necesidad de acceder a la estructura interna, más una primitiva que incrementa el contador de pacientes atendidos por cada doctor.
+
 ### [Struct Doctor](src/our_tda/doctor/doctor.h)
 ```c
 typedef struct
@@ -156,6 +162,12 @@ void doctor_destroy(Doctor *doctor);
 
 ### Descripción
 
+Esta estructura es la encargada de almacenar los datos de los pacientes, los cuales son extraídos del archivo CSV correspondiente.
+
+Para su creación implementamos una primitiva que recibe como parámetros el nombre y el año de entrada del paciente (brindados por el CSV); pedimos la memoria necesaria para almacenar la estructura, incluyendo memoria para una copia del dato del nombre, ya que la memoria que almacena a éste fué pedida en otra parte del código, la cuál es responsable por su liberación y al momento de la destrucción de la estructura no es nuestra responsabilidad liberar la memoria pedida en otro módulo (además causaría un error).
+
+Además de las primitivas de creación y destrucción ya mencionadas implementamos las correspondientes al acceso de información que contiene la estructura, de esta manera nos aseguramos acceder a los datos de la estructura sin tocar implícitamente la estructura interna.
+
 ### [Struct Paciente]((src/our_tda/patient/patient.h))
 ```c
 typedef struct
@@ -190,6 +202,12 @@ void destroy_patient(Patient *patient);
 [*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
+
+Esta estructura es un árbol binario de búsqueda adaptado para que funcione como un árbol de doctores. En ella se almacenan las estructuras de los doctores, siendo la clave de cada nodo el nombre del doctor, y el valor la estructura Doctor con los datos asociados.
+
+La elección de implementar la estructura de esta forma, ya disponiendo de la estrucuta `abb` fué para manteter consistente el lenguaje que utilizamos para desarrollar el código, la idea de hacer una estructura con primitivas específicas para el caso, y además su coste temporal en búsqueda de datos cumple con lo necesitado.
+
+Las primitivas son wrappers de las originales de `abb`, y como se puede ver, no wrappeamos toda la estructura sino las primitivas que necesitamos. Debemos agregar que hemos hecho una modificación en `abb`, implementamos una primitiva que itera al árbol por rangos internamente, debido a que no se nos ocurrió otra solución para recorrer el árbol en la complejidad pedida. Dicha primitiva funciona igual que el iterador interno original, sólo que recibe además dos parametros correspondientes al mínimo y máximo del rango de búsqueda requerido. De esta forma implementamos una variante del algoritmo de *búsqueda binaria*.
 
 ### [Struct Árbol de Doctores](stc/out_tda/doctor/bst_doctors.h)
 ```c
@@ -234,13 +252,19 @@ void bst_doctors_destroy(BSTDoctors *doctors);
  */
 void bst_doctors_in_order(BSTDoctors *doctors,
                   bool visit(const char *, void *, void *),
-                  Report *report);
+                  Rango *rango);
 ```
 
 ## [Hash de pacientes](src/our_tda/patient/hash_patients.c)
 [*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
+
+Esta estructura es un hash adaptado para que funcione como un hash de pacientes. En ella se almacenan las estructuras de los pacientes, siendo la clave de cada nodo el nombre del paciente, y el valor la estructura Paciente con los datos asociados.
+
+La elección de implementar la estructura de esta forma, ya disponiendo de la estrucuta `hash` fué para manteter consistente el lenguaje que utilizamos para desarrollar el código, la idea de hacer una estructura con primitivas específicas para el caso, y además su coste temporal en búsqueda de datos cumple con lo necesitado. Para explicar más en detalle el último de los motivos, sabemos que la búsqueda y obtención de datos en un hash es *O(1)*, complejidad que no perjudicaría a las exigidas por la consigna en la ejecución de los comandos que necesiten acceder a esta estructura en búsqueda de sus datos.
+
+Las primitivas son wrappers de las originales de `hash`, y como se puede ver, no wrappeamos toda la estructura sino las primitivas que necesitamos.
 
 ### [Struct Hash Pacientes](src/our_tda/patient/hash_patients.h)
 ```c
@@ -277,6 +301,14 @@ void hash_patients_destroy(HashPatients *patients);
 [*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
+
+Esta estructura es la correspondiente a la cola de pacientes con turnos urgentes en espera. Su estructura corresponde a una cola en donde se encolan los pacientes urgentes por orden de llegada, y un contador que indica la cantidad de pacientes en espera en esa cola de espera. En la cola interna de la estructura se almacenan datos de tipo Paciente.
+
+Para su implementación al principio pensabamos hacer un simple wrapper de `cola` que ya habíamos implementado, pero la estructura de dicha implementación no disponía de de un contador de datos encolados, entonces resolvimos agregar un contador que incrementa a medida que se encolan pacientes con turnos urgentes.
+
+Las primitivas en su mayoría son wrappers de la estructura `cola`, salvo la primitiva encargada de su destrucción que además de destruir la estructura `cola` que forma parte de la estructura, destruye la estructura en sí (entiéndase destruir con liberar memoria). Como originalmente en la primitiva encargada de liberar la memoria de la cola se debe enviar una función de destrucción de datos, enviámos la función de destrucción de estructura Paciente. Otra modificación se hace en el momento de encolar un paciente, también se incrementa el dato de la cantidad. Y por último una primitiva encargada de informar dicho dato.
+
+La elección de desta estructura se debe a que la complejidad a la hora de encolar y desencolar es constante (*O(1)*) por lo tanto cumple con la complejidad exigida.
 
 ### [Struct Cola de Pacientes](src/our_tda/turns/queue_patients.h)
 ```c
@@ -377,6 +409,12 @@ void hash_turns_destroy(HashTurns *turns);
 
 ### Descripción
 
+Esta estructura es un heap adaptado para que funcione como un heap de pacientes. En ella se almacenan las estructuras de los pacientes con turnos regulares, almacenados por antigüedad.
+
+La elección de implementar la estructura de esta forma, ya disponiendo de la estrucuta `heap` fué para manteter consistente el lenguaje que utilizamos para desarrollar el código, la idea de hacer una estructura con primitivas específicas para el caso, y además su coste temporal en búsqueda de datos cumple con lo necesitado. Para explicar más en detalle el último de los motivos, sabemos que la obtención de datos en un heap es *O(log n)*, complejidad que cumple con lo pedido para este tipo de turnos.
+
+Como en la estructura guardamos punteros a estructuras `Paciente`, para ordenar por antigüedad a los mismos, implementamos una función de comparación que compara los años dentro de las estructuras de los pacientes entre ellos.
+
 ### [Struct Heap de Pacientes](src/our_tda/turns/heap_patients.h)
 ```c
 typedef heap_t Heap_Turns;
@@ -412,52 +450,62 @@ bool heap_patients_enqueue(HeapPatients *turns, Patient *patient);
 Patient *heap_patients_dequeue(HeapPatients *turns);
 ```
 
-## [Reporte](src/our_tda/command/report.c)
+## [Rango](src/our_tda/command/range.c)
 [*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
-### [Struct Report](src/our_tda/command/report.h)
+Esta estructura almacena el rango de recorrido que se usa en el comando 3 para recorrer el árbol de doctores en rango. La estructura conforma dos punteros a arreglos de caracteres, que corresponden al nombre del doctor mínimo y máximo que limitan el recorrido, más un contador que va incrementando a medida que aparece un doctor que entra en el rango.
+
+La creación de la estructura recibe los límites como parámetro, revisa las longitudes de los límites y si la longitud del límite mínimo es 0 (osea que no se indicó límite mínimo) se asigna la letra más chica respecto al código ASCII ("A"), lo mismo para el límite máximo solo que se asigna la letra más grande respecto al código ASCII ("z"); de otra forma se asignan copias de los mismos límites.
+
+La destrucción de esta estructura se encarga de liberar la memoria de las copias de los límites y de la misma estructura.
+
+Implementamos primitivas para acceder por medio de ellas a los datos que almacena sin acceder a la estructura interna directamente.
+
+La elección de implementar esta estructura se debe a que, cuando pensamos en el funcionamiento del comando 3, pensamos en hacer un recorrido limitado (recorrido por rangos) en el árbol de doctores, pero como dicha primitiva recibe una función de visitar genérica, el dato que recibe como `void *extra` es uno sólo y debíamos trabajar con más de un dato.
+
+### [Struct Rango](src/our_tda/command/range.h)
 ```c
-typedef struct Report Report;
+typedef struct Rango Rango;
 ```
-### [Primitivas reporte](src/our_tda/command/report.h)
+### [Primitivas Rango](src/our_tda/command/range.h)
 ```c
 /* Crea la estructura */
-Report *report_create(const char *min, const char *max);
+Rango *rango_create(const char *min, const char *max);
 
 /*  Devuelve la cota inferior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite inferior de la búsqueda, si es vacío,
 *       se guarda "`" como máximo caracter (uno más grande que la "z" en ASCII).
 */
-char *report_min(const Report *report);
+char *rango_min(const Rango *rango);
 
 /*  Devuelve la cota superior del recorrido del informe.
 *   Pre: la estructura fué creada.
 *   Pos: nombre o letra que marca límite superior de la búsqueda, si es vacío,
 *       se guarda "{" como máximo caracter (uno más grande que la "z" en ASCII).
 */
-char *report_max(const Report *report);
+char *rango_max(const Rango *rango);
 
 /*  Informa la cantidad de doctores incluídos en el informe 
 *   Pre: la estructura fué creada.
 */
-size_t report_get_count(const Report *report);
+size_t rango_get_count(const Rango *rango);
 
 /*  Incrementa en uno el contador interno de la estructura.
 *   Pre: la estructura fué creada.
 */
-void report_count_increment(Report *report);
+void rango_count_increment(Rango *rango);
 
 /* Destruye la estructura */
-void report_destroy(Report *report);
+void rango_destroy(Rango *rango);
 ```
 
 # Código del programa
-[*Indice*](#Tabla-de-Contenidos)
 
 ## [main.c](main.c)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
@@ -468,12 +516,14 @@ Como es la encargada de crear las estructuras, también se hace responsable de l
 <!-- ### Funciones -->
 
 ## [load_structure_functions.c](src/function_libraries/load_structure_functions.c)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
 Librería que incluye las funciones que cargan los datos de los archivos CSV en memoria.
 
-### [Funciones](src/function_libraries/load_structure_functions.c)
+### [Funciones](src/function_libraries/load_structure_functions.h)
+[*Indice*](#Tabla-de-Contenidos)
 
 ```c
 /* 
@@ -502,6 +552,7 @@ BSTDoctors *load_doctors(lista_t *doctor_csv_lines);
 ```
 
 ## [command_functions.c](src/function_libraries/command_functions.c)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
@@ -556,23 +607,44 @@ void attend_patient(HashTurns *turns, BSTDoctors *doctors, char **parameters);
 *       O(log d) en el caso promedio, ya que no se recorre todo el árbol sino,
 *   que se corta el recorrido al llegar al límite superior.
 */
-void generate_report(BSTDoctors *doctors, char **parameters);
+void generate_rango(BSTDoctors *doctors, char **parameters);
 
 ```
 
 ## [csv.c](csv.c)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
+Lee un archivo CSV, lo parsea y devuelve una estructura `lista` con las líneas del archivo, parseadas.
+
 ### Funciones
+```c
+/**
+Haciendo uso de strutil (split) lee un archivo csv línea a línea.
+
+Se devuelve una lista con todos los elementos construidos con split. 
+Es decir una lista de arrays (char**) donde cada array es una linea del csv.
+devuelve NULL en caso de error al crear la lista.
+**/
+lista_t* csv_create(FILE* csv_file);
+
+/**
+ * Destruye la lista de arrays y el contenido de estos.
+ **/
+void csv_destroy(lista_t* list);
+
+```
 
 ## [error_messages.h](src/message_libraries/error_messages.h)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
 Librería de mensajes de error.
 
 ## [success_messages.h](src/message_libraries/success_messages.h)
+[*Indice*](#Tabla-de-Contenidos)
 
 ### Descripción
 
