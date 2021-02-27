@@ -3,16 +3,17 @@
 
 #include <stdlib.h>
 
-#include "../../basic_tda/abb.h"
+#include "../../basic_tda/avl.h"
 #include "doctor.h"
 #include "../command/range.h"
 
-/* Tipos de función para comparar claves y destruir datos. */
-typedef abb_comparar_clave_t bst_key_cmp;
-typedef abb_destruir_dato_t bst_doctor_destroy;
+/* Funciones de la estructura */
+
+typedef avl_cmp_key bst_key_cmp;
+typedef avl_destroy_data bst_doctor_destroy;
 
 /* Struct */
-typedef abb_t BSTDoctors;
+typedef AVL BSTDoctors;
 
 /* Primitivas de BSTDoctors */
 

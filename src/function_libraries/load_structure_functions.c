@@ -3,12 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "../basic_tda/hash.h"
-#include "../basic_tda/abb.h"
-#include "../basic_tda/heap.h"
-#include "../basic_tda/cola.h"
 #include "../basic_tda/lista.h"
-#include "../basic_tda/pila.h"
 
 #include "../our_tda/patient/patient.h"
 #include "../our_tda/doctor/doctor.h"
