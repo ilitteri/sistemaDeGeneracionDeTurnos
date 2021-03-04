@@ -8,7 +8,7 @@ HeapPatients *heap_patients_create(HeapPatients_cmp cmp)
 {
     HeapPatients *regular;
 
-    if ((regular = heap_crear(cmp)) == NULL)
+    if ((regular = heap_crear((cmp_func_t)cmp)) == NULL)
     {
         return NULL;
     }
@@ -16,9 +16,9 @@ HeapPatients *heap_patients_create(HeapPatients_cmp cmp)
     return regular;
 }
 
-void heap_patients_destroy(HeapPatients *turns, void (*patients_destroy) (void *))
+void heap_patients_destroy(HeapPatients *turns, bool destroy)
 {
-    heap_destruir(turns, patients_destroy);
+    heap_destruir(turns, destroy ? (void (*)(void *))destroy_patient : NULL);
 }
 
 size_t heap_patients_count(const HeapPatients *turns)

@@ -29,9 +29,9 @@ QueuePatients *queue_patients_create()
     return urgent;
 }
 
-void queue_patients_destroy(QueuePatients *urgent, void (*patients_destroy)(void *))
+void queue_patients_destroy(QueuePatients *urgent, bool destroy)
 {
-    cola_destruir(urgent->patients, patients_destroy);
+    cola_destruir(urgent->patients, destroy ? (void (*)(void *))destroy_patient : NULL);
     free(urgent);
 }
 

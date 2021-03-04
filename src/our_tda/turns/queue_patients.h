@@ -17,7 +17,7 @@ QueuePatients *queue_patients_create();
 /*  Destruye la estrucutura .
 *   Pre: la estructura fue creada.
 */
-void queue_patients_destroy(QueuePatients *patients, void (*patients_destroy)(void *));
+void queue_patients_destroy(QueuePatients *patients, bool destroy);
 
 /*  Informa si la cola se encuentra vacía (no modifica a la cola).
 *   Pre: la estructura fue creada.

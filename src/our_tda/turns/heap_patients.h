@@ -13,7 +13,7 @@ typedef heap_t HeapPatients;
 
 /* Funciones de la estructura */
 
-typedef cmp_func_t HeapPatients_cmp;
+typedef int (*HeapPatients_cmp)(const Patient *a, const Patient *b);
 
 /* Primitivas de la estructura */
 
@@ -25,7 +25,7 @@ HeapPatients *heap_patients_create(HeapPatients_cmp cmp);
 *   Pre: la estructura fué creada.
 *   Pos: se libera la memoria pedida para la estructura.
 */
-void heap_patients_destroy(HeapPatients *turns, void (*patient_destroy) (void *));
+void heap_patients_destroy(HeapPatients *turns, bool destroy);
 
 /*  Informa la cantidad de pacientes en espera (no modifica la estructura).
 *   Pre: la estructura fue creada.

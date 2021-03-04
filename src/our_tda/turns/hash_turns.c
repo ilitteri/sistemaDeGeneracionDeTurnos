@@ -23,19 +23,14 @@ static bool add_regular_turn(hash_t *regular, char *specialty, Patient *patient)
 static bool add_urgent_specialty(hash_t *urgent, char* specialty);
 static bool add_regular_specialty(hash_t *regular, char* specialty);
 
-void _destroy_patient(void *patient)
+void _queue_patients_destroy(QueuePatients *queue)
 {
-    destroy_patient((Patient *)patient);
+    queue_patients_destroy(queue, false);
 }
 
-void _queue_patients_destroy(void *queue)
+void _heap_patients_destroy(HeapPatients *heap)
 {
-    queue_patients_destroy((QueuePatients *)queue, NULL);
-}
-
-void _heap_patients_destroy(void *heap)
-{
-    heap_patients_destroy((HeapPatients *)heap, NULL);
+    heap_patients_destroy(heap, false);
 }
 
 HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
@@ -47,13 +42,13 @@ HashTurns *hash_turns_create(hash_turns_destroy_data destroy_data)
         return NULL;
     }
 
-    if ((turns->urgent = hash_crear(_queue_patients_destroy)) == NULL)
+    if ((turns->urgent = hash_crear((hash_destruir_dato_t)_queue_patients_destroy)) == NULL)
     {
         free(turns);
         return NULL;
     }
 
-    if ((turns->regular = hash_crear(_heap_patients_destroy)) == NULL)
+    if ((turns->regular = hash_crear((hash_destruir_dato_t)_heap_patients_destroy)) == NULL)
     {
         free(turns->urgent);
         free(turns);
@@ -102,7 +97,7 @@ static bool add_urgent_specialty(hash_t *urgent, char* specialty)
     return true;
 }
 
-int patient_entry_year_cmp(const void *n, const void *m)
+int patient_entry_year_cmp(const Patient *n, const Patient *m)
 {
     if (n == NULL && m == NULL)
     {
@@ -114,8 +109,8 @@ int patient_entry_year_cmp(const void *n, const void *m)
         return n == NULL ? 1 : -1;
     }
 
-    size_t n_year = patient_entry_year((Patient *)n);
-    size_t m_year = patient_entry_year((Patient *)m);
+    size_t n_year = patient_entry_year(n);
+    size_t m_year = patient_entry_year(m);
 
     return n_year == m_year ? 0 : n_year > m_year ? -1 : 1; 
 }
@@ -143,8 +138,8 @@ bool hash_turns_add_specialty(HashTurns *turns, char *specialty)
 
     if (!ok)
     {
-        queue_patients_destroy(hash_borrar(turns->urgent, specialty), _destroy_patient);
-        heap_patients_destroy(hash_borrar(turns->regular, specialty), _destroy_patient);
+        queue_patients_destroy(hash_borrar(turns->urgent, specialty), false);
+        heap_patients_destroy(hash_borrar(turns->regular, specialty), false);
         return false;
     }
 
