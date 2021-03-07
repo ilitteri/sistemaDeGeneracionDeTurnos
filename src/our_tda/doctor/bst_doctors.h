@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "../../basic_tda/avl.h"
+#include "../../basic_tda/abb.h"
 #include "doctor.h"
 #include "../command/range.h"
 
