@@ -39,7 +39,7 @@ static Node *node_create(const char *key, void *data);
 static Node *search_node(Node *current, Node *previous, const char *key, avl_cmp_key cmp, Stack *walk);
 /* Destroy auxiliar function prototypes */
 static void destroy_node(Node *current, avl_destroy_data destroy_data);
-static void _avl_destroy(Node *current, avl_destroy_data destroy_data);
+static void _abb_destroy(Node *current, avl_destroy_data destroy_data);
 /* Balance auxiliar function prototypes */
 static void left_left_rot(Node *a, Node *z, Node *y, Node *x, Descendancy z_des);
 static void right_right_rot(Node *a, Node *z, Node *y, Node *x, Descendancy z_des);
@@ -56,7 +56,7 @@ static void remove_no_children(AVL *avl, Node *previous, Node *current, Descenda
 static void remove_one_child(AVL *avl, Node *previous, Node *current, Descendancy relacion_act_ant, Descendancy current_child, bool is_root);
 static bool remove_two_children(AVL *avl, Node *previous, Node *current);
 static void analyze_paternity(AVL *avl, Node *previous, Node *current, const char *key, void **data, Descendancy relacion_act_ant);
-static bool _avl_remove(AVL *avl, Node *previous, Node *current, const char *key, void **data, Descendancy relacion_act_ant, char **parent_of_removed_key);
+static bool _abb_remove(AVL *avl, Node *previous, Node *current, const char *key, void **data, Descendancy relacion_act_ant, char **parent_of_removed_key);
 /* Outer iterator auxiliar function prototypes */
 void enqueue_nodes(Node *current, Stack *states);
 
@@ -87,7 +87,7 @@ static Node *node_create(const char *key, void *data)
     return node;
 }
 
-AVL *avl_create(avl_cmp_key cmp, avl_destroy_data destroy_data)
+AVL *abb_crear(avl_cmp_key cmp, avl_destroy_data destroy_data)
 {
     AVL *avl;
 
@@ -266,7 +266,7 @@ static void balance_tree(AVL *avl, Stack *walk)
     }
 }
 
-bool avl_save(AVL *avl, const char *key, void *data)
+bool abb_guardar(AVL *avl, const char *key, void *data)
 {
     if (avl == NULL)
     {
@@ -438,7 +438,7 @@ static void analyze_paternity(AVL *avl, Node *previous, Node *current, const cha
         remove_two_children(avl, previous, current);
 }
 
-static bool _avl_remove(AVL *avl, Node *previous, Node *current, const char *key, void **data, Descendancy relacion_act_ant, char **parent_of_removed_key)
+static bool _abb_remove(AVL *avl, Node *previous, Node *current, const char *key, void **data, Descendancy relacion_act_ant, char **parent_of_removed_key)
 {
     if (current == NULL)
     {
@@ -458,18 +458,18 @@ static bool _avl_remove(AVL *avl, Node *previous, Node *current, const char *key
 
     else if (cmp > 0)
     {
-        return _avl_remove(avl, current, current->right, key, data, RIGHT_NODE, parent_of_removed_key);
+        return _abb_remove(avl, current, current->right, key, data, RIGHT_NODE, parent_of_removed_key);
     }
 
     else
     {
-        return _avl_remove(avl, current, current->left, key, data, LEFT_NODE, parent_of_removed_key);
+        return _abb_remove(avl, current, current->left, key, data, LEFT_NODE, parent_of_removed_key);
     }
 
     return true;
 }
 
-void *avl_remove(AVL *avl, const char *key)
+void *abb_borrar(AVL *avl, const char *key)
 {
     if (avl == NULL || avl->count == 0)
     {
@@ -480,7 +480,7 @@ void *avl_remove(AVL *avl, const char *key)
 
     char *parent_of_remove_key = NULL;
 
-    if (!_avl_remove(avl, NULL, avl->root, key, &data, 0, &parent_of_remove_key))
+    if (!_abb_remove(avl, NULL, avl->root, key, &data, 0, &parent_of_remove_key))
     {
         return NULL;
     }
@@ -509,7 +509,7 @@ void *avl_remove(AVL *avl, const char *key)
     return data;
 }
 
-void *avl_get(const AVL *avl, const char *key)
+void *abb_obtener(const AVL *avl, const char *key)
 {
     if (avl == NULL)
     {
@@ -526,7 +526,7 @@ void *avl_get(const AVL *avl, const char *key)
     return avl->cmp(node->key, key) == 0 ? node->data : NULL;
 }
 
-bool avl_belongs(const AVL *avl, const char *key)
+bool abb_pertenece(const AVL *avl, const char *key)
 {
     if (avl == NULL)
     {
@@ -543,7 +543,7 @@ bool avl_belongs(const AVL *avl, const char *key)
     return avl->cmp(node->key, key) == 0;
 }
 
-size_t avl_count(AVL *avl)
+size_t abb_cantidad(AVL *avl)
 {
     return avl == NULL ? 0 : avl->count;
 }
@@ -558,7 +558,7 @@ static void destroy_node(Node *current, avl_destroy_data destroy_data)
     free(current);
 }
 
-static void _avl_destroy(Node *current, avl_destroy_data destroy_data)
+static void _abb_destroy(Node *current, avl_destroy_data destroy_data)
 {
     if (current == NULL)
     {
@@ -567,24 +567,24 @@ static void _avl_destroy(Node *current, avl_destroy_data destroy_data)
 
     if (current->left != NULL)
     {
-        _avl_destroy(current->left, destroy_data);
+        _abb_destroy(current->left, destroy_data);
     }
 
     if (current->right != NULL)
     {
-        _avl_destroy(current->right, destroy_data);
+        _abb_destroy(current->right, destroy_data);
     }
 
     destroy_node(current, destroy_data);
 }
 
-void avl_destroy(AVL *avl)
+void abb_destruir(AVL *avl)
 {
-    _avl_destroy(avl->root, avl->destroy_data);
+    _abb_destroy(avl->root, avl->destroy_data);
     free(avl);
 }
 
-static void _avl_in_range(Node *current, bool func(const char *, void *, void *), char *extra, char *min, char *max, bool *visit, avl_cmp_key cmp)
+static void _abb_in_range(Node *current, bool func(const char *, void *, void *), char *extra, char *min, char *max, bool *visit, avl_cmp_key cmp)
 {
     if (current == NULL || !(*visit))
     {
@@ -596,7 +596,7 @@ static void _avl_in_range(Node *current, bool func(const char *, void *, void *)
 
     if (min_cmp > 0)
     {
-        _avl_in_range(current->left, func, extra, min, max, visit, cmp);
+        _abb_in_range(current->left, func, extra, min, max, visit, cmp);
     }
     if (*visit && min_cmp >= 0 && max_cmp <= 0)
     {
@@ -604,7 +604,7 @@ static void _avl_in_range(Node *current, bool func(const char *, void *, void *)
     }
     if (max_cmp < 0)
     {
-        _avl_in_range(current->right, func, extra, min, max, visit, cmp);
+        _abb_in_range(current->right, func, extra, min, max, visit, cmp);
     }
 }
 
@@ -615,7 +615,7 @@ void avl_in_range(AVL *avl, bool func(const char *, void *, void *), void *extra
         return;
     }
     bool visit = true;
-    _avl_in_range(avl->root, func, extra, min, max, &visit, avl->cmp);
+    _abb_in_range(avl->root, func, extra, min, max, &visit, avl->cmp);
 }
 
 static void _avl_in_order(Node *current, bool func(const char *, void *, void *), void *extra, bool *visit)
@@ -634,7 +634,7 @@ static void _avl_in_order(Node *current, bool func(const char *, void *, void *)
     _avl_in_order(current->right, func, extra, visit);
 }
 
-void avl_in_order(AVL *avl, bool func(const char *, void *, void *), void *extra)
+void abb_in_order(AVL *avl, bool func(const char *, void *, void *), void *extra)
 {
     if (avl == NULL)
     {
@@ -654,7 +654,7 @@ void enqueue_nodes(Node *current, Stack *states)
     enqueue_nodes(current->left, states); //apilar states iniciales
 }
 
-AVL_Iter *avl_iter_in_create(const AVL *avl)
+AVL_Iter *abb_iter_in_crear(const AVL *avl)
 {
     if (avl == NULL)
     {
@@ -679,7 +679,7 @@ AVL_Iter *avl_iter_in_create(const AVL *avl)
     return iter;
 }
 
-bool avl_iter_in_forward(AVL_Iter *iter)
+bool abb_iter_in_avanzar(AVL_Iter *iter)
 {
     if (stack_is_empty(iter->states))
     {
@@ -698,17 +698,17 @@ bool avl_iter_in_forward(AVL_Iter *iter)
     return true;
 }
 
-const char *avl_iter_in_get_current(const AVL_Iter *iter)
+const char *abb_iter_in_ver_actual(const AVL_Iter *iter)
 {
     return stack_is_empty(iter->states) ? NULL : ((Node *)stack_first(iter->states))->key;
 }
 
-bool avl_iter_in_finished(const AVL_Iter *iter)
+bool abb_iter_in_al_final(const AVL_Iter *iter)
 {
     return stack_is_empty(iter->states);
 }
 
-void avl_iter_in_destroy(AVL_Iter *iter)
+void abb_iter_in_destruir(AVL_Iter *iter)
 {
     stack_destroy(iter->states);
     free(iter);
